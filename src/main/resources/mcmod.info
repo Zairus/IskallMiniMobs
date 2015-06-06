@@ -1,0 +1,16 @@
+[
+{
+  "modid": "iskallminimobs",
+  "name": "Iskall MiniMobs",
+  "description": "Miniature trainable levelable mobs",
+  "version": "0.1.7 alpha",
+  "mcversion": "1.7.10",
+  "url": "http://minecraft.curseforge.com/mc-mods/229967-iskall-mini-mobs",
+  "updateUrl": "",
+  "authorList": ["Iskall85","Winter_Grave"],
+  "credits": "Iskall85",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

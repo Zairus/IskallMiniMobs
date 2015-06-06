@@ -1,0 +1,17 @@
+entity.entity_minimob_pig.name=Pig Mini Mob
+entity.entity_minimob_skeleton.name=Skeleton Mini Mob
+entity.entity_minimob_zombie.name=Zombie Mini Mob
+entity.entity_minimob_creeper.name=Creeper Mini Mob
+entity.entity_minimob_spider.name=Spider Mini Mob
+item.mm_embrio.pig.name=Pig Mini Mob Embrio
+item.mm_embrio.zombie.name=Zombie Mini Mob Embrio
+item.mm_embrio.skeleton.name=Skeleton Mini Mob Embrio
+item.mm_embrio.creeper.name=Creeper Mini Mob Embrio
+item.mm_embrio.spider.name=Spider Mini Mob Embrio
+item.mm_pellet.name=Mini Mob Pellet
+item.mm_termicunit.name=MM Termic Unit
+item.mm_pelletholder.name=MM Pellet Holder
+item.mm_pelletpanel.name=MM Pellet Panel
+itemGroup.tabIskallMinimobs=Iskall Minimobs
+tile.mm_incubator.name=MM Incubator
+tile.mm_creativecell.name=MM Creative Energy Cell
