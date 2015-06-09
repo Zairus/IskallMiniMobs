@@ -21,17 +21,36 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import zairus.iskallminimobs.entity.ai.EntityAIFollowMaster;
 import zairus.iskallminimobs.entity.ai.EntityAIMasterHurtByTarget;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityMiniMobBase
 	extends EntityCreature
 	implements IMob
 {
+	public double speedCurrent = 0.20D;
+	public double speedMax = 0.50D;
+	public double healthCurrent = 10.0D;
+	public double healthMax = 80.0D;
+	public double followRangeCurrent = 15.0D;
+	public double followRangeMax = 20.0D;
+	public double attackDamageCurrent = 1.0D;
+	public double attackDamageMax = 5.0D;
+	
+	public double experience = 0.0D;
+	public int level = 0;
+	public double nextLevelUp = 10.0D;
+	
+	private double nextLevelStep = 1.5D;
+	
 	public EntityMiniMobBase(World world)
 	{
 		super(world);
@@ -51,7 +70,40 @@ public class EntityMiniMobBase
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAIMasterHurtByTarget(this));
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityMob.class, 0, true));
+		
+		applyMiniMobAttributes();
 	}
+	
+	@Override
+	protected void applyEntityAttributes()
+	{
+		super.applyEntityAttributes();
+		
+		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+	}
+	
+	public void applyMiniMobAttributes()
+	{
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(this.speedCurrent);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.healthCurrent);
+		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(this.followRangeCurrent);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(this.attackDamageCurrent);
+	}
+	
+	public void applyAttributesFromNBT(NBTTagCompound data)
+	{
+		this.speedCurrent = data.getDouble(MiniMobData.SPEED_KEY);
+		this.healthCurrent = data.getDouble(MiniMobData.HEALTH_KEY);
+		this.followRangeCurrent = data.getDouble(MiniMobData.FOLLOW_KEY);
+		this.attackDamageCurrent = data.getDouble(MiniMobData.ATTACK_KEY);
+		
+		this.experience = data.getDouble(MiniMobData.EXPERIENCE_KEY);
+		this.level = data.getInteger(MiniMobData.LEVEL_KEY);
+		
+		applyMiniMobAttributes();
+	}
+	
+	public void equip() {}
 	
 	@SuppressWarnings({ "rawtypes" })
 	public boolean canAttackClass(Class classEntity)
@@ -141,21 +193,18 @@ public class EntityMiniMobBase
 	
 	public boolean attackEntityAsMob(Entity p_70652_1_)
 	{
-		float f = (float) this.getEntityAttribute(
-				SharedMonsterAttributes.attackDamage).getAttributeValue();
+		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+		
 		int i = 0;
-
+		
 		if (p_70652_1_ instanceof EntityLivingBase)
 		{
-			f += EnchantmentHelper.getEnchantmentModifierLiving(this,
-					(EntityLivingBase) p_70652_1_);
-			i += EnchantmentHelper.getKnockbackModifier(this,
-					(EntityLivingBase) p_70652_1_);
+			f += EnchantmentHelper.getEnchantmentModifierLiving(this, (EntityLivingBase) p_70652_1_);
+			i += EnchantmentHelper.getKnockbackModifier(this, (EntityLivingBase) p_70652_1_);
 		}
-
-		boolean flag = p_70652_1_.attackEntityFrom(
-				DamageSource.causeMobDamage(this), f);
-
+		
+		boolean flag = p_70652_1_.attackEntityFrom(DamageSource.causeMobDamage(this), f);
+		
 		if (flag)
 		{
 			if (i > 0)
@@ -171,25 +220,87 @@ public class EntityMiniMobBase
 				this.motionX *= 0.6D;
 				this.motionZ *= 0.6D;
 			}
-
+			
 			int j = EnchantmentHelper.getFireAspectModifier(this);
-
+			
 			if (j > 0)
 			{
 				p_70652_1_.setFire(j * 4);
 			}
-
+			
 			if (p_70652_1_ instanceof EntityLivingBase)
 			{
-				EnchantmentHelper.func_151384_a((EntityLivingBase) p_70652_1_,
-						this);
+				EnchantmentHelper.func_151384_a((EntityLivingBase) p_70652_1_, this);
 			}
-
+			
 			EnchantmentHelper.func_151385_b(this, p_70652_1_);
+			
+			gainExperience(1.5D);
 		}
 
 		return flag;
 	}
+	
+	private void gainExperience(double exp)
+	{
+		experience += exp;
+		
+		if (experience >= nextLevelUp)
+		{
+			++level;
+			nextLevelUp *= nextLevelStep;
+			
+			worldObj.playSoundAtEntity(this, "random.levelup", 1.0F, 1.0F / (this.rand.nextFloat() * 0.4F + 0.8F));
+			
+			if (!worldObj.isRemote)
+				generateRandomParticles("happyVillager");
+			
+			speedCurrent += 0.05D;
+			if (speedCurrent > speedMax)
+				speedCurrent = speedMax;
+			
+			healthCurrent += 1.0D;
+			if (healthCurrent > healthMax)
+				healthCurrent = healthMax;
+			
+			followRangeCurrent += 0.5D;
+			if (followRangeCurrent > followRangeMax)
+				followRangeCurrent = followRangeMax;
+			
+			attackDamageCurrent += 0.02D;
+			if (attackDamageCurrent > attackDamageMax)
+				attackDamageCurrent = attackDamageMax;
+			
+			applyMiniMobAttributes();
+			
+			int d = 400;
+			
+			this.addPotionEffect(new PotionEffect(Potion.regeneration.id, d));
+			this.addPotionEffect(new PotionEffect(Potion.resistance.id, d));
+			this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, d));
+			this.addPotionEffect(new PotionEffect(Potion.damageBoost.id, d));
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+    private void generateRandomParticles(String particleName)
+    {
+        for (int i = 0; i < 5; ++i)
+        {
+            double d0 = this.rand.nextGaussian() * 0.02D;
+            double d1 = this.rand.nextGaussian() * 0.02D;
+            double d2 = this.rand.nextGaussian() * 0.02D;
+            
+            this.worldObj.spawnParticle(
+            		particleName, 
+            		this.posX + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, 
+            		this.posY + 1.0D + (double)(this.rand.nextFloat() * this.height), 
+            		this.posZ + (double)(this.rand.nextFloat() * this.width * 2.0F) - (double)this.width, 
+            		d0, 
+            		d1, 
+            		d2);
+        }
+    }
 	
 	protected void attackEntity(Entity p_70785_1_, float p_70785_2_)
 	{
@@ -239,40 +350,6 @@ public class EntityMiniMobBase
 	protected String getSplashSound()
 	{
 		return "game.hostile.swim.splash";
-	}
-	
-	public void writeEntityToNBT(NBTTagCompound tag)
-	{
-		super.writeEntityToNBT(tag);
-		
-		if (this.getOwnerUUID() == null)
-		{
-			tag.setString("OwnerUUID", "");
-		} else
-		{
-			tag.setString("OwnerUUID", this.getOwnerUUID());
-		}
-	}
-	
-	public void readEntityFromNBT(NBTTagCompound tag)
-	{
-		super.readEntityFromNBT(tag);
-		String s = "";
-		
-		if (tag.hasKey("OwnerUUID", 8))
-		{
-			s = tag.getString("OwnerUUID");
-		} else
-		{
-			String s1 = tag.getString("Owner");
-			s = PreYggdrasilConverter.func_152719_a(s1);
-		}
-		
-		if (s.length() > 0)
-		{
-			this.setOwnerUUID(s);
-			this.setTamed(true);
-		}
 	}
 	
 	public boolean isTamed()
@@ -340,15 +417,92 @@ public class EntityMiniMobBase
 	}
 	
 	@Override
-	protected void applyEntityAttributes()
-	{
-		super.applyEntityAttributes();
-		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-	}
-	
-	@Override
 	protected boolean func_146066_aG()
 	{
 		return true;
+	}
+	
+	public NBTTagCompound getMiniMobData()
+	{
+		NBTTagCompound data = new NBTTagCompound();
+		
+		data.setString("OwnerUUID", this.getOwnerUUID());
+		
+		data.setDouble(MiniMobData.SPEED_KEY, this.speedCurrent);
+		data.setDouble(MiniMobData.HEALTH_KEY, this.healthCurrent);
+		data.setDouble(MiniMobData.FOLLOW_KEY, this.followRangeCurrent);
+		data.setDouble(MiniMobData.ATTACK_KEY, this.attackDamageCurrent);
+		
+		data.setDouble(MiniMobData.EXPERIENCE_KEY, this.experience);
+		data.setDouble(MiniMobData.LEVEL_KEY, this.level);
+		data.setDouble(MiniMobData.NEXTLEVEL_KEY, this.nextLevelUp);
+		
+		data.setInteger(MiniMobData.MOBTYPE_KEY, 0);
+		
+		return data;
+	}
+	
+	public void writeEntityToNBT(NBTTagCompound tag)
+	{
+		super.writeEntityToNBT(tag);
+		
+		if (this.getOwnerUUID() == null)
+		{
+			tag.setString("OwnerUUID", "");
+		} else
+		{
+			tag.setString("OwnerUUID", this.getOwnerUUID());
+		}
+		
+		tag.setDouble(MiniMobData.SPEED_KEY, this.speedCurrent);
+		tag.setDouble(MiniMobData.HEALTH_KEY, this.healthCurrent);
+		tag.setDouble(MiniMobData.FOLLOW_KEY, this.followRangeCurrent);
+		tag.setDouble(MiniMobData.ATTACK_KEY, this.attackDamageCurrent);
+		tag.setDouble(MiniMobData.EXPERIENCE_KEY, this.experience);
+		
+		tag.setInteger(MiniMobData.LEVEL_KEY, this.level);
+		tag.setDouble(MiniMobData.NEXTLEVEL_KEY, this.nextLevelUp);
+	}
+	
+	public void readEntityFromNBT(NBTTagCompound tag)
+	{
+		super.readEntityFromNBT(tag);
+		String s = "";
+		
+		if (tag.hasKey("OwnerUUID", 8))
+		{
+			s = tag.getString("OwnerUUID");
+		} else
+		{
+			String s1 = tag.getString("Owner");
+			s = PreYggdrasilConverter.func_152719_a(s1);
+		}
+		
+		if (s.length() > 0)
+		{
+			this.setOwnerUUID(s);
+			this.setTamed(true);
+		}
+		
+		if (tag.hasKey(MiniMobData.SPEED_KEY))
+			this.speedCurrent = tag.getDouble(MiniMobData.SPEED_KEY);
+		
+		if (tag.hasKey(MiniMobData.HEALTH_KEY))
+			this.healthCurrent = tag.getDouble(MiniMobData.HEALTH_KEY);
+		
+		if (tag.hasKey(MiniMobData.FOLLOW_KEY))
+			this.followRangeCurrent = tag.getDouble(MiniMobData.FOLLOW_KEY);
+		
+		if (tag.hasKey(MiniMobData.ATTACK_KEY))
+			this.attackDamageCurrent = tag.getDouble(MiniMobData.ATTACK_KEY);
+		
+		if (tag.hasKey(MiniMobData.EXPERIENCE_KEY))
+			this.experience = tag.getDouble(MiniMobData.EXPERIENCE_KEY);
+		
+		if (tag.hasKey(MiniMobData.LEVEL_KEY))
+			this.level = tag.getInteger(MiniMobData.LEVEL_KEY);
+		
+		if(tag.hasKey(MiniMobData.NEXTLEVEL_KEY))
+			this.nextLevelUp = tag.getDouble(MiniMobData.NEXTLEVEL_KEY);
 	}
 }

@@ -3,11 +3,11 @@ package zairus.iskallminimobs.entity.minimob;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class EntityMiniMobSpider extends EntityMiniMobBase
@@ -21,14 +21,6 @@ public class EntityMiniMobSpider extends EntityMiniMobBase
 		this.setSize(0.35F, 0.45F);
 		
 		this.setCombatTask();
-	}
-	
-	protected void applyEntityAttributes()
-	{
-		super.applyEntityAttributes();
-		
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.45D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
 	}
 	
 	public void setCombatTask()
@@ -121,5 +113,15 @@ public class EntityMiniMobSpider extends EntityMiniMobBase
 		}
 		
 		this.dataWatcher.updateObject(14, Byte.valueOf(b0));
+	}
+	
+	@Override
+	public NBTTagCompound getMiniMobData()
+	{
+		NBTTagCompound data = super.getMiniMobData();
+		
+		data.setInteger(MiniMobData.MOBTYPE_KEY, 4);
+		
+		return data;
 	}
 }

@@ -2,7 +2,6 @@ package zairus.iskallminimobs.entity.minimob;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
 import net.minecraft.entity.monster.EntityMob;
@@ -22,14 +21,6 @@ public class EntityMiniMobPig extends EntityMiniMobBase
 		this.setSize(0.45F, 0.45F);
 		
 		this.setCombatTask();
-	}
-	
-	protected void applyEntityAttributes()
-	{
-		super.applyEntityAttributes();
-		
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.45D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
 	}
 	
 	public void setCombatTask()

@@ -25,7 +25,7 @@ public class MMIncubator
 		
 		this.setBlockName(unlocalizedName);
 		this.setCreativeTab(IskallMiniMobs.tabIskallMinimobs);
-		this.setBlockTextureName(MMConstants.MODNAME + ":" + "template_block");
+		this.setBlockTextureName(MMConstants.MODID + ":" + "template_block");
 		this.setStepSound(soundTypeGlass);
 		this.setHardness(2.0F);
 		this.setResistance(7.0F);

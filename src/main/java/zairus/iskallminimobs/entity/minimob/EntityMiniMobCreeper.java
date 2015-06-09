@@ -1,12 +1,12 @@
 package zairus.iskallminimobs.entity.minimob;
 
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -23,14 +23,6 @@ public class EntityMiniMobCreeper extends EntityMiniMobBase
 		this.setSize(0.35F, 0.45F);
 		
 		this.setCombatTask();
-	}
-	
-	protected void applyEntityAttributes()
-	{
-		super.applyEntityAttributes();
-		
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.45D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
 	}
 	
 	public void setCombatTask()
@@ -75,5 +67,15 @@ public class EntityMiniMobCreeper extends EntityMiniMobBase
 	public boolean getPowered()
 	{
 		return false;
+	}
+	
+	@Override
+	public NBTTagCompound getMiniMobData()
+	{
+		NBTTagCompound data = super.getMiniMobData();
+		
+		data.setInteger(MiniMobData.MOBTYPE_KEY, 3);
+		
+		return data;
 	}
 }

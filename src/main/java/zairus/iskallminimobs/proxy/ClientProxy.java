@@ -1,5 +1,6 @@
 package zairus.iskallminimobs.proxy;
 
+import zairus.iskallminimobs.client.render.entity.RenderMMPellet;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobCreeper;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobPig;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobSkeleton;
@@ -10,6 +11,7 @@ import zairus.iskallminimobs.entity.minimob.EntityMiniMobPig;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSkeleton;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSpider;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobZombie;
+import zairus.iskallminimobs.entity.projectile.EntityMMPellet;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -34,6 +36,8 @@ public class ClientProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSkeleton.class, new RenderMiniMobSkeleton());
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobCreeper.class, new RenderMiniMobCreeper());
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSpider.class, new RenderMiniMobSpider());
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityMMPellet.class, new RenderMMPellet());
 	}
 	
 	@Override

@@ -6,7 +6,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -17,6 +16,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -33,14 +33,14 @@ public class EntityMiniMobZombie extends EntityMiniMobBase
 		this.setCombatTask();
 	}
 	
-	protected void applyEntityAttributes()
+	@Override
+	public void applyMiniMobAttributes()
 	{
-		super.applyEntityAttributes();
+		super.applyMiniMobAttributes();
 		
-		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(40.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.45D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(3.5D);
+		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(this.followRangeCurrent * 2.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.healthCurrent * 1.10D);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(this.attackDamageCurrent * 1.20D);
 	}
 	
 	public int getTotalArmorValue()
@@ -121,10 +121,9 @@ public class EntityMiniMobZombie extends EntityMiniMobBase
 		}
 	}
 	
-	public IEntityLivingData onSpawnWithEgg(IEntityLivingData p_110161_1_)
+	@Override
+	public void equip()
 	{
-		Object p_110161_1_1 = super.onSpawnWithEgg(p_110161_1_);
-		
 		this.setCanPickUpLoot(true);
 		
 		this.addRandomArmor();
@@ -163,8 +162,6 @@ public class EntityMiniMobZombie extends EntityMiniMobBase
 							new AttributeModifier("Random zombie-spawn bonus",
 									d0, 2));
 		}
-		
-		return (IEntityLivingData) p_110161_1_1;
 	}
 	
 	public double getYOffset()
@@ -194,5 +191,15 @@ public class EntityMiniMobZombie extends EntityMiniMobBase
 				this.worldObj.spawnEntityInWorld(new EntityItem(this.worldObj, entity.posX, entity.posY, entity.posZ, stack));
 			}
 		}
+	}
+	
+	@Override
+	public NBTTagCompound getMiniMobData()
+	{
+		NBTTagCompound data = super.getMiniMobData();
+		
+		data.setInteger(MiniMobData.MOBTYPE_KEY, 1);
+		
+		return data;
 	}
 }

@@ -1,5 +1,7 @@
 package zairus.iskallminimobs.tileentity;
 
+import zairus.iskallminimobs.MMConstants;
+import zairus.iskallminimobs.entity.minimob.MiniMobData;
 import zairus.iskallminimobs.item.MMItems;
 import cofh.api.energy.IEnergyHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +42,6 @@ public class TileEntityMMIncubator
 			ItemStack pellets = this.getStackInSlot(0);
 			ItemStack pelletEmbrio;
 			
-			String completionKey = "Gestation Completion";
 			float completion = 0;
 			
 			for (int i = 1; i < 17; ++i)
@@ -51,7 +52,7 @@ public class TileEntityMMIncubator
 					if (!stack.hasTagCompound())
 						stack.setTagCompound(new NBTTagCompound());
 					
-					completion = stack.getTagCompound().getFloat(completionKey);
+					completion = stack.getTagCompound().getFloat(MMConstants.INCUBATOR_COMPLETION_KEY);
 					
 					if (completion < 100.0F)
 					{
@@ -63,7 +64,7 @@ public class TileEntityMMIncubator
 							completion = 100.0F;
 						
 						stack.getTagCompound().setFloat(
-								completionKey
+								MMConstants.INCUBATOR_COMPLETION_KEY
 								, completion);
 					}
 					else
@@ -80,7 +81,7 @@ public class TileEntityMMIncubator
 							if (!pelletEmbrio.hasTagCompound())
 								pelletEmbrio.setTagCompound(new NBTTagCompound());
 							
-							pelletEmbrio.getTagCompound().setInteger("mobType", stack.getItemDamage());
+							pelletEmbrio.getTagCompound().setTag(MiniMobData.MOBDATA_KEY, defaultMiniMobData(stack));
 							
 							this.setInventorySlotContents(i, (ItemStack)null);
 							this.setInventorySlotContents(i, pelletEmbrio);
@@ -89,6 +90,23 @@ public class TileEntityMMIncubator
 				}
 			}
 		}
+	}
+	
+	private NBTTagCompound defaultMiniMobData(ItemStack stack)
+	{
+		NBTTagCompound data = new NBTTagCompound();
+		
+		data.setInteger(MiniMobData.MOBTYPE_KEY, stack.getItemDamage());
+		
+		data.setInteger(MiniMobData.LEVEL_KEY, 0);
+		data.setDouble(MiniMobData.EXPERIENCE_KEY, 0);
+		
+		data.setDouble(MiniMobData.SPEED_KEY, 0.10D);
+		data.setDouble(MiniMobData.HEALTH_KEY, 10.0D);
+		data.setDouble(MiniMobData.FOLLOW_KEY, 15.0D);
+		data.setDouble(MiniMobData.ATTACK_KEY, 1.0D);
+		
+		return data;
 	}
 	
 	@Override

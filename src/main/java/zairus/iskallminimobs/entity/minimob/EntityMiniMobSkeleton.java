@@ -9,7 +9,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIArrowAttack;
@@ -42,14 +41,6 @@ public class EntityMiniMobSkeleton
 		
 		if (world != null && !world.isRemote)
 			this.setCombatTask();
-	}
-	
-	protected void applyEntityAttributes()
-	{
-		super.applyEntityAttributes();
-		
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.45D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(40.0D);
 	}
 	
 	protected String getLivingSound()
@@ -176,10 +167,9 @@ public class EntityMiniMobSkeleton
 		this.setCurrentItemOrArmor(0, new ItemStack(Items.bow));
 	}
 	
-	public IEntityLivingData onSpawnWithEgg(IEntityLivingData p_110161_1_)
+	@Override
+	public void equip()
 	{
-		p_110161_1_ = super.onSpawnWithEgg(p_110161_1_);
-		
 		if (this.getRNG().nextInt(5) > 500000)
 		{
 			this.tasks.addTask(4, this.aiAttackOnCollide);
@@ -210,8 +200,6 @@ public class EntityMiniMobSkeleton
 				this.equipmentDropChances[4] = 0.0F;
 			}
 		}
-		
-		return p_110161_1_;
 	}
 	
 	public void setCombatTask()
@@ -322,5 +310,15 @@ public class EntityMiniMobSkeleton
 	public float getBrightness(float f)
 	{
 		return 0.1F;
+	}
+	
+	@Override
+	public NBTTagCompound getMiniMobData()
+	{
+		NBTTagCompound data = super.getMiniMobData();
+		
+		data.setInteger(MiniMobData.MOBTYPE_KEY, 2);
+		
+		return data;
 	}
 }

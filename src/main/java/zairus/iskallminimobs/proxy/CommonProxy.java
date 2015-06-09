@@ -9,6 +9,7 @@ import zairus.iskallminimobs.entity.minimob.EntityMiniMobPig;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSkeleton;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSpider;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobZombie;
+import zairus.iskallminimobs.entity.projectile.EntityMMPellet;
 import zairus.iskallminimobs.item.MMItems;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -33,6 +34,8 @@ public class CommonProxy
 		this.registerEntity(EntityMiniMobSkeleton.class, "entity_minimob_skeleton", 0xffffff, 0xcccccc);
 		this.registerEntity(EntityMiniMobCreeper.class, "entity_minimob_creeper", 0x4fc500, 0x7e8b75);
 		this.registerEntity(EntityMiniMobSpider.class, "entity_minimob_spider", 0x21271d, 0xb70000);
+		
+		this.registerEntity(EntityMMPellet.class, "entity_mm_pellet");
 	}
 	
 	public void postInit(FMLPostInitializationEvent e)
@@ -41,12 +44,23 @@ public class CommonProxy
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void registerEntity(Class <?extends Entity> clazz, String entityId, int eggBgColor, int eggFgColor)
+	private int registerEntity(Class <?extends Entity> clazz, String entityId, int eggBgColor, int eggFgColor)
 	{
-		int id = EntityRegistry.findGlobalUniqueEntityId();
-		EntityRegistry.registerGlobalEntityID(clazz, entityId, id);
-		EntityRegistry.registerModEntity(clazz, entityId, id, IskallMiniMobs.instance, 64, 1, true);
+		int id = registerEntity(clazz, entityId);
+		
 		EntityList.IDtoClassMapping.put(id, clazz);
 		EntityList.entityEggs.put(id, new EntityList.EntityEggInfo(id, eggBgColor, eggFgColor));
+		
+		return id;
+	}
+	
+	private int registerEntity(Class <?extends Entity> clazz, String entityId)
+	{
+		int id = EntityRegistry.findGlobalUniqueEntityId();
+		
+		EntityRegistry.registerGlobalEntityID(clazz, entityId, id);
+		EntityRegistry.registerModEntity(clazz, entityId, id, IskallMiniMobs.instance, 64, 1, true);
+		
+		return id;
 	}
 }
