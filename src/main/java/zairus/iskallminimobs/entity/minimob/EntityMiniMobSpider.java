@@ -1,13 +1,17 @@
 package zairus.iskallminimobs.entity.minimob;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
 public class EntityMiniMobSpider extends EntityMiniMobBase
@@ -88,6 +92,22 @@ public class EntityMiniMobSpider extends EntityMiniMobBase
 	
 	public void setInWeb()
 	{
+	}
+	
+	@Override
+	public boolean attackEntityAsMob(Entity entity)
+	{
+		if (super.attackEntityAsMob(entity))
+		{
+			if (level > 5)
+			{
+				if (this.rand.nextInt(10) > 7)
+					((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.poison.id, 200));
+			}
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public EnumCreatureAttribute getCreatureAttribute()

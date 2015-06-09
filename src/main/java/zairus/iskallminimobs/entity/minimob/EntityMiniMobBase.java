@@ -49,7 +49,7 @@ public class EntityMiniMobBase
 	public int level = 0;
 	public double nextLevelUp = 10.0D;
 	
-	private double nextLevelStep = 1.5D;
+	private double nextLevelStep = 1.8D;
 	
 	public EntityMiniMobBase(World world)
 	{
@@ -99,6 +99,7 @@ public class EntityMiniMobBase
 		
 		this.experience = data.getDouble(MiniMobData.EXPERIENCE_KEY);
 		this.level = data.getInteger(MiniMobData.LEVEL_KEY);
+		this.nextLevelUp = data.getDouble(MiniMobData.NEXTLEVEL_KEY);
 		
 		applyMiniMobAttributes();
 	}
@@ -241,7 +242,7 @@ public class EntityMiniMobBase
 		return flag;
 	}
 	
-	private void gainExperience(double exp)
+	public void gainExperience(double exp)
 	{
 		experience += exp;
 		
