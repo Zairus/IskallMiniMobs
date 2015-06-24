@@ -29,8 +29,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import zairus.iskallminimobs.entity.ai.EntityAIFollowMaster;
 import zairus.iskallminimobs.entity.ai.EntityAIMasterHurtByTarget;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityMiniMobBase
 	extends EntityCreature
@@ -48,8 +46,6 @@ public class EntityMiniMobBase
 	public double experience = 0.0D;
 	public int level = 0;
 	public double nextLevelUp = 10.0D;
-	
-	private double nextLevelStep = 1.8D;
 	
 	public EntityMiniMobBase(World world)
 	{
@@ -236,7 +232,7 @@ public class EntityMiniMobBase
 			
 			EnchantmentHelper.func_151385_b(this, p_70652_1_);
 			
-			gainExperience(1.5D);
+			gainExperience(1.0D);
 		}
 
 		return flag;
@@ -244,33 +240,37 @@ public class EntityMiniMobBase
 	
 	public void gainExperience(double exp)
 	{
-		experience += exp;
+		this.experience += exp;
 		
-		if (experience >= nextLevelUp)
+		if (this.nextLevelUp == 0)
+			this.nextLevelUp = 10.0D;
+		
+		if (this.experience >= this.nextLevelUp)
 		{
-			++level;
-			nextLevelUp *= nextLevelStep;
-			
-			worldObj.playSoundAtEntity(this, "random.levelup", 1.0F, 1.0F / (this.rand.nextFloat() * 0.4F + 0.8F));
+			++this.level;
+			this.nextLevelUp = this.nextLevelUp * 1.9D;
 			
 			if (!worldObj.isRemote)
+			{
+				worldObj.playSoundAtEntity(this, "random.levelup", 1.0F, 1.0F / (this.rand.nextFloat() * 0.4F + 0.8F));
 				generateRandomParticles("happyVillager");
+			}
 			
-			speedCurrent += 0.05D;
-			if (speedCurrent > speedMax)
-				speedCurrent = speedMax;
+			this.speedCurrent += 0.05D;
+			if (this.speedCurrent > this.speedMax)
+				this.speedCurrent = this.speedMax;
 			
-			healthCurrent += 1.0D;
-			if (healthCurrent > healthMax)
-				healthCurrent = healthMax;
+			this.healthCurrent += 1.0D;
+			if (this.healthCurrent > this.healthMax)
+				this.healthCurrent = this.healthMax;
 			
-			followRangeCurrent += 0.5D;
-			if (followRangeCurrent > followRangeMax)
-				followRangeCurrent = followRangeMax;
+			this.followRangeCurrent += 0.5D;
+			if (this.followRangeCurrent > this.followRangeMax)
+				this.followRangeCurrent = this.followRangeMax;
 			
-			attackDamageCurrent += 0.02D;
-			if (attackDamageCurrent > attackDamageMax)
-				attackDamageCurrent = attackDamageMax;
+			this.attackDamageCurrent += 0.02D;
+			if (this.attackDamageCurrent > this.attackDamageMax)
+				this.attackDamageCurrent = this.attackDamageMax;
 			
 			applyMiniMobAttributes();
 			
@@ -283,9 +283,11 @@ public class EntityMiniMobBase
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
     private void generateRandomParticles(String particleName)
     {
+		if (worldObj.isRemote)
+			return;
+		
         for (int i = 0; i < 5; ++i)
         {
             double d0 = this.rand.nextGaussian() * 0.02D;

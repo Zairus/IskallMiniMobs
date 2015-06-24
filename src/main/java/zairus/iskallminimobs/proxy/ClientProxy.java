@@ -1,5 +1,6 @@
 package zairus.iskallminimobs.proxy;
 
+import zairus.iskallminimobs.block.MMBlocks;
 import zairus.iskallminimobs.client.render.entity.RenderMMPellet;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobCreeper;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobPig;
@@ -24,6 +25,7 @@ public class ClientProxy
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		super.preInit(e);
+		MMBlocks.initSpecialRenderers();
 	}
 	
 	@Override

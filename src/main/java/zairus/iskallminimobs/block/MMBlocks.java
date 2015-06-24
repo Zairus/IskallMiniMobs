@@ -20,8 +20,17 @@ public class MMBlocks
 	
 	public static final void init()
 	{
-		registerBlock(mm_incubator = new MMIncubator("mm_incubator"), new RenderMMIncubator(), TileEntityMMIncubator.class, "tileEntityMMIncubator");
-		registerBlock(mm_creativecell = new MMCreativeCell("mm_creativecell"), TileEntityMMCreativeCell.class, "tileEntityMMCreativeCell");
+		mm_incubator = new MMIncubator("mm_incubator");
+		mm_creativecell = new MMCreativeCell("mm_creativecell");
+		
+		registerBlock(mm_incubator, TileEntityMMIncubator.class, "tileEntityMMIncubator");
+		registerBlock(mm_creativecell, TileEntityMMCreativeCell.class, "tileEntityMMCreativeCell");
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static final void initSpecialRenderers()
+	{
+		registerBlock(mm_incubator, new RenderMMIncubator(), TileEntityMMIncubator.class, "tileEntityMMIncubator");
 	}
 	
 	@SuppressWarnings("unused")
@@ -38,7 +47,7 @@ public class MMBlocks
 	
 	private static void registerBlock(Block block, TileEntitySpecialRenderer specialRenderer, Class<? extends TileEntity> tileEntityClass, String tileEntityId)
 	{
-		doRegisterBlock(block);
+		//doRegisterBlock(block);
 		
 		if (block instanceof IMMSpecialRenderedBlock)
 		{
@@ -56,7 +65,7 @@ public class MMBlocks
 	{
 		specialRenderedBlock.setRenderId(RenderingRegistry.getNextAvailableRenderId());
 		
-		ClientRegistry.registerTileEntity(tileEntityClass, tileEntityId, specialRenderer);
+		//ClientRegistry.registerTileEntity(tileEntityClass, tileEntityId, specialRenderer);
 		ClientRegistry.bindTileEntitySpecialRenderer(tileEntityClass, specialRenderer);
 		
 		RenderingRegistry.registerBlockHandler((ISimpleBlockRenderingHandler)specialRenderer);

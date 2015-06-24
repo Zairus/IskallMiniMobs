@@ -1,6 +1,8 @@
 package zairus.iskallminimobs.entity.minimob;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -66,6 +68,24 @@ public class EntityMiniMobCreeper extends EntityMiniMobBase
 	
 	public boolean getPowered()
 	{
+		return false;
+	}
+	
+	@Override
+	public boolean attackEntityAsMob(Entity entity)
+	{
+		if (super.attackEntityAsMob(entity))
+		{
+			if (level > 6)
+			{
+				if (this.rand.nextInt(10) > 7)
+				{
+					((EntityLivingBase) entity).setFire(6);
+				}
+			}
+			return true;
+		}
+		
 		return false;
 	}
 	

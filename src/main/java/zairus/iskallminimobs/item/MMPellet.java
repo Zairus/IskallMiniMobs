@@ -95,7 +95,11 @@ public class MMPellet
 			miniMobPellet.setTagCompound(tag);
 			miniMobPellet.getTagCompound().setTag(MiniMobData.MOBDATA_KEY, data);
 			
-			player.inventory.consumeInventoryItem(MMItems.mm_pellet);
+			//player.inventory.consumeInventoryItem(MMItems.mm_pellet);
+			//player.inventory.getStackInSlot(player.inventory.currentItem).stackSize--;
+			player.inventory.decrStackSize(player.inventory.currentItem, 1);
+			player.inventory.markDirty();
+			
 			entity.setDead();
 			
 			if (!player.inventory.addItemStackToInventory(miniMobPellet))
