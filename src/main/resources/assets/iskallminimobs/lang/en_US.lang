@@ -1,8 +1,8 @@
-entity.entity_minimob_pig.name=Pig Mini Mob
-entity.entity_minimob_skeleton.name=Skeleton Mini Mob
-entity.entity_minimob_zombie.name=Zombie Mini Mob
-entity.entity_minimob_creeper.name=Creeper Mini Mob
-entity.entity_minimob_spider.name=Spider Mini Mob
+entity.iskallminimobs.entity_minimob_pig.name=Pig Mini Mob
+entity.iskallminimobs.entity_minimob_skeleton.name=Skeleton Mini Mob
+entity.iskallminimobs.entity_minimob_zombie.name=Zombie Mini Mob
+entity.iskallminimobs.entity_minimob_creeper.name=Creeper Mini Mob
+entity.iskallminimobs.entity_minimob_spider.name=Spider Mini Mob
 item.mm_embrio.pig.name=Pig Mini Mob Embrio
 item.mm_embrio.zombie.name=Zombie Mini Mob Embrio
 item.mm_embrio.skeleton.name=Skeleton Mini Mob Embrio
