@@ -12,4 +12,6 @@ public class MiniMobData
 	public static final String EXPERIENCE_KEY = "experience";
 	public static final String LEVEL_KEY = "level";
 	public static final String NEXTLEVEL_KEY = "nextLevel";
+	public static final String INVENTORY_KEY = "Items";
+	public static final String CUSTOMNAME_KEY = "CustomName";
 }

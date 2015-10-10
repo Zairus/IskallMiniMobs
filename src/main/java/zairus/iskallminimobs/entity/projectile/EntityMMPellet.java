@@ -94,6 +94,8 @@ public class EntityMMPellet
 			if (miniMobData != null)
 				miniMob.applyAttributesFromNBT(miniMobData);
 			
+			playSound("iskallminimobs:pellet_crack", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+			
 			worldObj.spawnEntityInWorld(miniMob);
 			
 			dropItem(MMItems.mm_pellet, 1);

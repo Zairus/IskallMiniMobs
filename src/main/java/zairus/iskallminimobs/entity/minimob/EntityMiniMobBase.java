@@ -21,6 +21,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.management.PreYggdrasilConverter;
@@ -88,6 +89,13 @@ public class EntityMiniMobBase
 	
 	public void applyAttributesFromNBT(NBTTagCompound data)
 	{
+		NBTTagList nbttaglist = data.getTagList(MiniMobData.INVENTORY_KEY, 10);
+		
+		if (data.hasKey(MiniMobData.CUSTOMNAME_KEY))
+		{
+			this.setCustomNameTag(data.getString(MiniMobData.CUSTOMNAME_KEY));
+		}
+		
 		this.speedCurrent = data.getDouble(MiniMobData.SPEED_KEY);
 		this.healthCurrent = data.getDouble(MiniMobData.HEALTH_KEY);
 		this.followRangeCurrent = data.getDouble(MiniMobData.FOLLOW_KEY);
@@ -96,6 +104,8 @@ public class EntityMiniMobBase
 		this.experience = data.getDouble(MiniMobData.EXPERIENCE_KEY);
 		this.level = data.getInteger(MiniMobData.LEVEL_KEY);
 		this.nextLevelUp = data.getDouble(MiniMobData.NEXTLEVEL_KEY);
+		
+		setItemList(nbttaglist);
 		
 		applyMiniMobAttributes();
 	}
@@ -188,25 +198,31 @@ public class EntityMiniMobBase
 		return p_146067_1_ > 4 ? "game.hostile.hurt.fall.big" : "game.hostile.hurt.fall.small";
 	}
 	
-	public boolean attackEntityAsMob(Entity p_70652_1_)
+	public boolean attackEntityAsMob(Entity entity)
 	{
 		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
 		
 		int i = 0;
 		
-		if (p_70652_1_ instanceof EntityLivingBase)
+		if (entity instanceof EntityLivingBase)
 		{
-			f += EnchantmentHelper.getEnchantmentModifierLiving(this, (EntityLivingBase) p_70652_1_);
-			i += EnchantmentHelper.getKnockbackModifier(this, (EntityLivingBase) p_70652_1_);
+			f += EnchantmentHelper.getEnchantmentModifierLiving(this, (EntityLivingBase) entity);
+			i += EnchantmentHelper.getKnockbackModifier(this, (EntityLivingBase) entity);
 		}
 		
-		boolean flag = p_70652_1_.attackEntityFrom(DamageSource.causeMobDamage(this), f);
+		boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), f);
 		
 		if (flag)
 		{
+			entity.hitByEntity(this);
+			if (entity instanceof EntityCreature)
+			{
+				((EntityCreature)entity).setTarget(this);
+			}
+			
 			if (i > 0)
 			{
-				p_70652_1_.addVelocity(
+				entity.addVelocity(
 						(double) (-MathHelper.sin(this.rotationYaw
 								* (float) Math.PI / 180.0F)
 								* (float) i * 0.5F),
@@ -222,15 +238,15 @@ public class EntityMiniMobBase
 			
 			if (j > 0)
 			{
-				p_70652_1_.setFire(j * 4);
+				entity.setFire(j * 4);
 			}
 			
-			if (p_70652_1_ instanceof EntityLivingBase)
+			if (entity instanceof EntityLivingBase)
 			{
-				EnchantmentHelper.func_151384_a((EntityLivingBase) p_70652_1_, this);
+				EnchantmentHelper.func_151384_a((EntityLivingBase) entity, this);
 			}
 			
-			EnchantmentHelper.func_151385_b(this, p_70652_1_);
+			EnchantmentHelper.func_151385_b(this, entity);
 			
 			gainExperience(1.0D);
 		}
@@ -305,14 +321,14 @@ public class EntityMiniMobBase
         }
     }
 	
-	protected void attackEntity(Entity p_70785_1_, float p_70785_2_)
+	protected void attackEntity(Entity entity, float f)
 	{
-		if (this.attackTime <= 0 && p_70785_2_ < 2.0F
-				&& p_70785_1_.boundingBox.maxY > this.boundingBox.minY
-				&& p_70785_1_.boundingBox.minY < this.boundingBox.maxY)
+		if (this.attackTime <= 0 && f < 2.0F
+				&& entity.boundingBox.maxY > this.boundingBox.minY
+				&& entity.boundingBox.minY < this.boundingBox.maxY)
 		{
 			this.attackTime = 20;
-			this.attackEntityAsMob(p_70785_1_);
+			this.attackEntityAsMob(entity);
 		}
 	}
 	
@@ -425,11 +441,27 @@ public class EntityMiniMobBase
 		return true;
 	}
 	
+	protected NBTTagList getItemList()
+	{
+		return new NBTTagList();
+	}
+	
+	protected void setItemList(NBTTagList nbttaglist)
+	{
+		;
+	}
+	
 	public NBTTagCompound getMiniMobData()
 	{
 		NBTTagCompound data = new NBTTagCompound();
+		NBTTagList nbttaglist = getItemList();
 		
 		data.setString("OwnerUUID", this.getOwnerUUID());
+		
+		if (this.hasCustomNameTag())
+		{
+			data.setString(MiniMobData.CUSTOMNAME_KEY, this.getCustomNameTag());
+		}
 		
 		data.setDouble(MiniMobData.SPEED_KEY, this.speedCurrent);
 		data.setDouble(MiniMobData.HEALTH_KEY, this.healthCurrent);
@@ -442,12 +474,15 @@ public class EntityMiniMobBase
 		
 		data.setInteger(MiniMobData.MOBTYPE_KEY, 0);
 		
+		data.setTag(MiniMobData.INVENTORY_KEY, nbttaglist);
+		
 		return data;
 	}
 	
 	public void writeEntityToNBT(NBTTagCompound tag)
 	{
 		super.writeEntityToNBT(tag);
+		NBTTagList nbttaglist = getItemList();
 		
 		if (this.getOwnerUUID() == null)
 		{
@@ -455,6 +490,11 @@ public class EntityMiniMobBase
 		} else
 		{
 			tag.setString("OwnerUUID", this.getOwnerUUID());
+		}
+		
+		if (this.hasCustomNameTag())
+		{
+			tag.setString(MiniMobData.CUSTOMNAME_KEY, this.getCustomNameTag());
 		}
 		
 		tag.setDouble(MiniMobData.SPEED_KEY, this.speedCurrent);
@@ -465,12 +505,15 @@ public class EntityMiniMobBase
 		
 		tag.setInteger(MiniMobData.LEVEL_KEY, this.level);
 		tag.setDouble(MiniMobData.NEXTLEVEL_KEY, this.nextLevelUp);
+		
+		tag.setTag(MiniMobData.INVENTORY_KEY, nbttaglist);
 	}
 	
 	public void readEntityFromNBT(NBTTagCompound tag)
 	{
 		super.readEntityFromNBT(tag);
 		String s = "";
+		NBTTagList nbttaglist = tag.getTagList(MiniMobData.INVENTORY_KEY, 10);
 		
 		if (tag.hasKey("OwnerUUID", 8))
 		{
@@ -479,6 +522,11 @@ public class EntityMiniMobBase
 		{
 			String s1 = tag.getString("Owner");
 			s = PreYggdrasilConverter.func_152719_a(s1);
+		}
+		
+		if (tag.hasKey(MiniMobData.CUSTOMNAME_KEY, 8))
+		{
+			this.setCustomNameTag(tag.getString(MiniMobData.CUSTOMNAME_KEY));
 		}
 		
 		if (s.length() > 0)
@@ -507,5 +555,7 @@ public class EntityMiniMobBase
 		
 		if(tag.hasKey(MiniMobData.NEXTLEVEL_KEY))
 			this.nextLevelUp = tag.getDouble(MiniMobData.NEXTLEVEL_KEY);
+		
+		setItemList(nbttaglist);
 	}
 }

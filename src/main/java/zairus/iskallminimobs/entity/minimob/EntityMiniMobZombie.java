@@ -17,7 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.EnumDifficulty;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
 public class EntityMiniMobZombie extends EntityMiniMobBase
@@ -78,6 +78,12 @@ public class EntityMiniMobZombie extends EntityMiniMobBase
 		this.playSound("mob.zombie.step", 0.15F, 1.0F);
 	}
 	
+	@Override
+	public boolean attackEntityAsMob(Entity entity)
+	{
+		return super.attackEntityAsMob(entity);
+	}
+	
 	protected Item getDropItem()
 	{
 		return Items.rotten_flesh;
@@ -105,20 +111,7 @@ public class EntityMiniMobZombie extends EntityMiniMobBase
 	
 	protected void addRandomArmor()
 	{
-		super.addRandomArmor();
-		
-		if (this.rand.nextFloat() < (this.worldObj.difficultySetting == EnumDifficulty.HARD ? 0.05F : 0.01F))
-		{
-			int i = this.rand.nextInt(3);
-			
-			if (i == 0)
-			{
-				this.setCurrentItemOrArmor(0, new ItemStack(Items.iron_sword));
-			} else
-			{
-				this.setCurrentItemOrArmor(0, new ItemStack(Items.iron_shovel));
-			}
-		}
+		;
 	}
 	
 	@Override
@@ -201,5 +194,42 @@ public class EntityMiniMobZombie extends EntityMiniMobBase
 		data.setInteger(MiniMobData.MOBTYPE_KEY, 1);
 		
 		return data;
+	}
+	
+	@Override
+	protected NBTTagList getItemList()
+	{
+		NBTTagList nbttaglist = new NBTTagList();
+		
+		for (int i = 0; i < 5; ++i)
+		{
+			NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+			nbttagcompound1.setByte("Slot", (byte)i);
+			
+			if (this.getEquipmentInSlot(i) != null)
+				this.getEquipmentInSlot(i).writeToNBT(nbttagcompound1);
+			
+			nbttaglist.appendTag(nbttagcompound1);
+		}
+		
+		return nbttaglist;
+	}
+	
+	@Override
+	protected void setItemList(NBTTagList nbttaglist)
+	{
+		for (int i = 0; i < nbttaglist.tagCount(); ++i)
+		{
+			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+			if (nbttagcompound1 != null)
+			{
+				int j = nbttagcompound1.getByte("Slot") & 255;
+				
+				if (j >= 0 && j < 5)
+				{
+					this.setCurrentItemOrArmor(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+				}
+			}
+		}
 	}
 }

@@ -2,12 +2,15 @@ package zairus.iskallminimobs.item;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import zairus.iskallminimobs.MMConstants;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobBase;
 import zairus.iskallminimobs.entity.minimob.MiniMobData;
 import zairus.iskallminimobs.entity.projectile.EntityMMPellet;
@@ -17,11 +20,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class MMPellet
 	extends MMItemBase
 {
+	private IIcon[] mobIconOverlay;
+	private IIcon emptyOverlay;
+	private IIcon baseIcon;
+	
 	public MMPellet()
 	{
 		super();
 		
-		setTextureName("iskallminimobs:mm_pellet");
+		setTextureName(MMConstants.MODID + ":mm_pellet");
 	}
 	
 	@Override
@@ -39,8 +46,19 @@ public class MMPellet
 			{
 				NBTTagCompound data = (NBTTagCompound)tag.getTag(MiniMobData.MOBDATA_KEY);
 				
+				String mobName;
 				int mobType = (data.getInteger(MiniMobData.MOBTYPE_KEY));
-				list.add("Contains: " + mobDescriptions[mobType]);
+				
+				if (data.hasKey(MiniMobData.CUSTOMNAME_KEY))
+				{
+					mobName = data.getString(MiniMobData.CUSTOMNAME_KEY);
+				}
+				else
+				{
+					mobName = mobDescriptions[mobType];
+				}
+				
+				list.add("Contains: " + mobName);
 				
 				list.add("level: " + data.getInteger(MiniMobData.LEVEL_KEY));
 				list.add("xp: " + data.getDouble(MiniMobData.EXPERIENCE_KEY));
@@ -95,8 +113,6 @@ public class MMPellet
 			miniMobPellet.setTagCompound(tag);
 			miniMobPellet.getTagCompound().setTag(MiniMobData.MOBDATA_KEY, data);
 			
-			//player.inventory.consumeInventoryItem(MMItems.mm_pellet);
-			//player.inventory.getStackInSlot(player.inventory.currentItem).stackSize--;
 			player.inventory.decrStackSize(player.inventory.currentItem, 1);
 			player.inventory.markDirty();
 			
@@ -109,5 +125,43 @@ public class MMPellet
 		}
 		
 		return true;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getBaseIcon()
+	{
+		return this.baseIcon;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getOverlay(ItemStack stack)
+	{
+		NBTTagCompound tag = stack.getTagCompound();
+		
+		if (tag != null && tag.hasKey(MiniMobData.MOBTYPE_KEY))
+		{
+			int mobType = (tag.getInteger(MiniMobData.MOBTYPE_KEY));
+			return mobIconOverlay[mobType];
+		}
+		else
+		{
+			return emptyOverlay;
+		}
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister iconRegister)
+	{
+		this.mobIconOverlay = new IIcon[5];
+		
+		this.mobIconOverlay[0] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_pig");
+		this.mobIconOverlay[1] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_zombie");
+		this.mobIconOverlay[2] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_skeleton");
+		this.mobIconOverlay[3] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_creeper");
+		this.mobIconOverlay[4] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_spider");
+		
+		this.emptyOverlay = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_empty");
+		this.baseIcon = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet");
 	}
 }

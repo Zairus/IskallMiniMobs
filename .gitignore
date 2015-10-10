@@ -2,6 +2,7 @@
 /bin/
 /eclipse/
 /build/
+/__wfiles/
 /.classpath
 /.project
 /.settings/

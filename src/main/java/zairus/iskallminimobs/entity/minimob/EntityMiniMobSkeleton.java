@@ -19,8 +19,12 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.AchievementList;
@@ -163,7 +167,7 @@ public class EntityMiniMobSkeleton
 	
 	protected void addRandomArmor()
 	{
-		super.addRandomArmor();
+		//super.addRandomArmor();
 		
 		this.setCurrentItemOrArmor(0, new ItemStack(Items.bow));
 	}
@@ -181,8 +185,8 @@ public class EntityMiniMobSkeleton
 		} else {
 			this.tasks.addTask(4, this.aiArrowAttack);
 			
-			this.addRandomArmor();
-			this.enchantEquipment();
+			//this.addRandomArmor();
+			//this.enchantEquipment();
 		}
 		
 		this.setCanPickUpLoot(true);
@@ -297,11 +301,18 @@ public class EntityMiniMobSkeleton
 		p_70014_1_.setByte("SkeletonType", (byte) this.getSkeletonType());
 	}
 	
-	public void setCurrentItemOrArmor(int p_70062_1_, ItemStack p_70062_2_)
+	@Override
+	public void setCurrentItemOrArmor(int slot, ItemStack stack)
 	{
-		super.setCurrentItemOrArmor(p_70062_1_, p_70062_2_);
+		if (
+				stack.getItem() instanceof ItemArmor 
+				|| stack.getItem() instanceof ItemSword 
+				|| stack.getItem() instanceof ItemBow)
+		{
+			super.setCurrentItemOrArmor(slot, stack);
+		}
 		
-		if (!this.worldObj.isRemote && p_70062_1_ == 0)
+		if (!this.worldObj.isRemote && slot == 0)
 		{
 			this.setCombatTask();
 		}
@@ -326,5 +337,42 @@ public class EntityMiniMobSkeleton
 		data.setInteger(MiniMobData.MOBTYPE_KEY, 2);
 		
 		return data;
+	}
+	
+	@Override
+	protected NBTTagList getItemList()
+	{
+		NBTTagList nbttaglist = new NBTTagList();
+		
+		for (int i = 0; i < 5; ++i)
+		{
+			NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+			nbttagcompound1.setByte("Slot", (byte)i);
+			
+			if (this.getEquipmentInSlot(i) != null)
+				this.getEquipmentInSlot(i).writeToNBT(nbttagcompound1);
+			
+			nbttaglist.appendTag(nbttagcompound1);
+		}
+		
+		return nbttaglist;
+	}
+	
+	@Override
+	protected void setItemList(NBTTagList nbttaglist)
+	{
+		for (int i = 0; i < nbttaglist.tagCount(); ++i)
+		{
+			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+			if (nbttagcompound1 != null)
+			{
+				int j = nbttagcompound1.getByte("Slot") & 255;
+				
+				if (j >= 0 && j < 5)
+				{
+					this.setCurrentItemOrArmor(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+				}
+			}
+		}
 	}
 }
