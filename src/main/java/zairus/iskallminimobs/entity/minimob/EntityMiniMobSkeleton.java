@@ -1,6 +1,7 @@
 package zairus.iskallminimobs.entity.minimob;
 
-import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
@@ -13,13 +14,12 @@ import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
@@ -93,6 +93,39 @@ public class EntityMiniMobSkeleton
 	public void onLivingUpdate()
 	{
 		super.onLivingUpdate();
+		
+		this.worldObj.theProfiler.startSection("looting");
+		
+		if (!this.worldObj.isRemote && !this.dead)
+		{
+			@SuppressWarnings("rawtypes")
+			List list = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1.0D, 0.0D, 1.0D));
+			@SuppressWarnings("rawtypes")
+			Iterator iterator = list.iterator();
+			
+			while (iterator.hasNext())
+			{
+				EntityItem entityitem = (EntityItem)iterator.next();
+				if (!entityitem.isDead && entityitem.getEntityItem() != null)
+				{
+					ItemStack itemstack = entityitem.getEntityItem();
+					int i = getArmorPosition(itemstack);
+					
+					if (i > 0 || (i == 0 && (itemstack.getItem() instanceof ItemSword || itemstack.getItem() instanceof ItemBow)))
+					{
+						ItemStack itemstack1 = this.getEquipmentInSlot(i);
+						if (itemstack1 == null)
+						{
+							this.setCurrentItemOrArmor(i, itemstack);
+							entityitem.setDead();
+							this.setCombatTask();
+						}
+					}
+				}
+			}
+		}
+		
+		this.worldObj.theProfiler.endSection();
 	}
 	
 	public void updateRidden()
@@ -167,8 +200,6 @@ public class EntityMiniMobSkeleton
 	
 	protected void addRandomArmor()
 	{
-		//super.addRandomArmor();
-		
 		this.setCurrentItemOrArmor(0, new ItemStack(Items.bow));
 	}
 	
@@ -184,27 +215,9 @@ public class EntityMiniMobSkeleton
 			this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4.0D);
 		} else {
 			this.tasks.addTask(4, this.aiArrowAttack);
-			
-			//this.addRandomArmor();
-			//this.enchantEquipment();
 		}
 		
-		this.setCanPickUpLoot(true);
-		
-		if (this.getEquipmentInSlot(4) == null)
-		{
-			Calendar calendar = this.worldObj.getCurrentDate();
-			
-			if (calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.rand.nextFloat() < 0.25F)
-			{
-				this.setCurrentItemOrArmor(
-						4,
-						new ItemStack(
-								this.rand.nextFloat() < 0.1F ? Blocks.lit_pumpkin
-										: Blocks.pumpkin));
-				this.equipmentDropChances[4] = 0.0F;
-			}
-		}
+		this.setCanPickUpLoot(false);
 	}
 	
 	public void setCombatTask()
@@ -222,12 +235,12 @@ public class EntityMiniMobSkeleton
 		}
 	}
 	
-	public void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_)
+	public void attackEntityWithRangedAttack(EntityLivingBase entity, float p_82196_2_)
 	{
 		EntityArrow entityarrow = new EntityArrow(
 				this.worldObj,
 				this,
-				p_82196_1_,
+				entity,
 				1.6F,
 				(float) (14 - this.worldObj.difficultySetting.getDifficultyId() * 4));
 		
@@ -260,6 +273,12 @@ public class EntityMiniMobSkeleton
 		
 		this.playSound("random.bow", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 		this.worldObj.spawnEntityInWorld(entityarrow);
+		
+		if (entity instanceof EntityCreature)
+		{
+			((EntityCreature)entity).setTarget(this);
+			((EntityCreature)entity).setLastAttacker(this);
+		}
 		
 		gainExperience(1.5D);
 	}
@@ -304,13 +323,7 @@ public class EntityMiniMobSkeleton
 	@Override
 	public void setCurrentItemOrArmor(int slot, ItemStack stack)
 	{
-		if (
-				stack.getItem() instanceof ItemArmor 
-				|| stack.getItem() instanceof ItemSword 
-				|| stack.getItem() instanceof ItemBow)
-		{
-			super.setCurrentItemOrArmor(slot, stack);
-		}
+		super.setCurrentItemOrArmor(slot, stack);
 		
 		if (!this.worldObj.isRemote && slot == 0)
 		{

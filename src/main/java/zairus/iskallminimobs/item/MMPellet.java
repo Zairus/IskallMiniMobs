@@ -133,7 +133,19 @@ public class MMPellet
 		return this.baseIcon;
 	}
 	
-	@SideOnly(Side.CLIENT)
+	public IIcon getOverlay(int index)
+	{
+		if (index == -1)
+		{
+			return this.emptyOverlay;
+		}
+		else
+		{
+			return this.mobIconOverlay[index];
+		}
+	}
+	
+	//@SideOnly(Side.CLIENT)
 	public IIcon getOverlay(ItemStack stack)
 	{
 		NBTTagCompound tag = stack.getTagCompound();

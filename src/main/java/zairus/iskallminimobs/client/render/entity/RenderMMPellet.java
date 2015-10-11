@@ -1,9 +1,5 @@
 package zairus.iskallminimobs.client.render.entity;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import zairus.iskallminimobs.item.MMItems;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -15,16 +11,22 @@ import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import zairus.iskallminimobs.item.MMItems;
+import zairus.iskallminimobs.item.MMPellet;
+
 public class RenderMMPellet
 	extends Render
 {
 	private Item item;
-	private int field_94150_f;
+	//private int field_94150_f;
 	
 	public RenderMMPellet(Item renderItem, int p_i1259_2_)
 	{
 		this.item = renderItem;
-		this.field_94150_f = p_i1259_2_;
+		//this.field_94150_f = p_i1259_2_;
 	}
 	
 	public RenderMMPellet(Item renderItem)
@@ -39,7 +41,7 @@ public class RenderMMPellet
 	
 	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
 	{
-		IIcon iicon = this.item.getIconFromDamage(this.field_94150_f);
+		IIcon iicon = ((MMPellet)this.item).getBaseIcon();
 		
 		if (iicon != null)
 		{

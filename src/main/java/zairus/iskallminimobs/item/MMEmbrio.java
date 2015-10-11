@@ -2,6 +2,7 @@ package zairus.iskallminimobs.item;
 
 import java.util.List;
 
+import zairus.iskallminimobs.MMConstants;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +25,7 @@ public class MMEmbrio
 	{
 		super();
 		
-		this.setTextureName("iskallminimobs:mm_embrio");
+		this.setTextureName(MMConstants.MODID + ":mm_embrio");
 		this.maxStackSize = 1;
 		this.setHasSubtypes(true);
 	}

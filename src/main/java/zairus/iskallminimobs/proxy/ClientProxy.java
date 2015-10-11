@@ -46,7 +46,7 @@ public class ClientProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSpider.class, new RenderMiniMobSpider());
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityMMPellet.class, new RenderMMPellet());
-		//ItemRenderer
+		
 		MinecraftForgeClient.registerItemRenderer(MMItems.mm_pellet, new RenderItemMMPellet());
 	}
 	

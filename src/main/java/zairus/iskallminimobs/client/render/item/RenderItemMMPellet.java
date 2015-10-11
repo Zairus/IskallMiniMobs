@@ -6,12 +6,14 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import zairus.iskallminimobs.entity.minimob.MiniMobData;
 import zairus.iskallminimobs.helpers.ColorHelper;
 import zairus.iskallminimobs.item.MMPellet;
 import zairus.iskallminimobs.proxy.ClientProxy;
@@ -52,6 +54,18 @@ public class RenderItemMMPellet
 		}
 		
 		Item item = stack.getItem();
+		int mmtype = -1;
+		
+		if (stack.hasTagCompound())
+		{
+			if (stack.getTagCompound().hasKey(MiniMobData.MOBDATA_KEY))
+			{
+				if (((NBTTagCompound)stack.getTagCompound().getTag(MiniMobData.MOBDATA_KEY)).hasKey(MiniMobData.MOBTYPE_KEY))
+				{
+					mmtype = ((NBTTagCompound)stack.getTagCompound().getTag(MiniMobData.MOBDATA_KEY)).getInteger(MiniMobData.MOBTYPE_KEY);
+				}
+			}
+		}
 		
 		if (type.equals(IItemRenderer.ItemRenderType.INVENTORY))
 		{
@@ -77,7 +91,7 @@ public class RenderItemMMPellet
 	                GL11.glEnable(GL11.GL_LIGHTING);
 				}
 				
-				icon = ((MMPellet)stack.getItem()).getOverlay(stack);
+				icon = ((MMPellet)item).getOverlay(mmtype);
 				
 				if (icon != null)
 				{
@@ -143,7 +157,8 @@ public class RenderItemMMPellet
 					}
 				}
 				
-				icon = ((MMPellet)stack.getItem()).getOverlay(stack);
+				icon = ((MMPellet)item).getOverlay(mmtype);
+				
 				if (icon != null)
 				{
 					color = item.getColorFromItemStack(stack, pass);
@@ -188,7 +203,7 @@ public class RenderItemMMPellet
 			IIcon icon = ((MMPellet)stack.getItem()).getBaseIcon();
 			drawItem(icon, 0.09375F);
 			
-			icon = ((MMPellet)stack.getItem()).getOverlay(stack);
+			icon = ((MMPellet)item).getOverlay(mmtype);
 			drawItem(icon, 0.09375F);
 			
 			GL11.glPopMatrix();

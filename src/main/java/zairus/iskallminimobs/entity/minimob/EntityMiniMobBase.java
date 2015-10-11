@@ -218,6 +218,7 @@ public class EntityMiniMobBase
 			if (entity instanceof EntityCreature)
 			{
 				((EntityCreature)entity).setTarget(this);
+				((EntityCreature)entity).setLastAttacker(this);
 			}
 			
 			if (i > 0)
