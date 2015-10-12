@@ -144,6 +144,30 @@ public class ContainerMMIncubator
 		{
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
+			
+			// Player inventory
+			if (slotNumber < 36)
+			{
+				if (itemstack1.getItem() == MMItems.mm_embrio)
+					if (!this.mergeItemStack(itemstack1, 37, 53, false))
+						return null;
+				
+				if (itemstack1.getItem() == MMItems.mm_pellet)
+					if (!this.mergeItemStack(itemstack1, 36, 37, false))
+						return null;
+			}
+			
+			// Incubator
+			if (slotNumber > 35 && slotNumber < 53)
+			{
+				if (!this.mergeItemStack(itemstack1, 0, 36, false))
+					return null;
+			}
+			
+			if (itemstack1.stackSize == 0)
+				slot.putStack((ItemStack)null);
+			else
+				slot.onSlotChanged();
 		}
 		
 		return itemstack;

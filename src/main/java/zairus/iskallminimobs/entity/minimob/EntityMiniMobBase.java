@@ -356,6 +356,21 @@ public class EntityMiniMobBase
 		}
 	}
 	
+	/*private void angerEnemies()
+	{
+		@SuppressWarnings("unchecked")
+		List<EntityMob> enemies = worldObj.getEntitiesWithinAABB(EntityMob.class, AxisAlignedBB.getBoundingBox(posX-16, posY-8, posZ-16, posX+16, posY+8, posZ+16));
+		
+		for (EntityMob enemy : enemies)
+		{
+			if (enemy.getAttackTarget() == null)
+			{
+				enemy.setTarget(this);
+				enemy.setRevengeTarget(this);
+			}
+		}
+	}*/
+	
 	@Override
 	public void onUpdate()
 	{
