@@ -8,6 +8,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class MMItems
 {
 	public static MMItemBase mm_embrio;
+	public static MMItemBase mm_corpse;
 	public static MMItemBase mm_pellet;
 	public static MMItemBase mm_termicunit;
 	public static MMItemBase mm_pelletholder;
@@ -16,6 +17,7 @@ public class MMItems
 	public static final void init()
 	{
 		mm_embrio = new MMEmbrio().setUnlocalizedName("mm_embrio");
+		mm_corpse = new MMCorpse().setUnlocalizedName("mm_corpse");
 		mm_pellet = new MMPellet().setUnlocalizedName("mm_pellet");
 		mm_termicunit = new MMTermicUnit().setUnlocalizedName("mm_termicunit");
 		mm_pelletholder = new MMPelletHolder().setUnlocalizedName("mm_pelletholder");
@@ -25,6 +27,7 @@ public class MMItems
 	public static final void register()
 	{
 		GameRegistry.registerItem(mm_embrio, mm_embrio.getUnlocalizedName());
+		GameRegistry.registerItem(mm_corpse, mm_corpse.getUnlocalizedName());
 		GameRegistry.registerItem(mm_pellet, mm_pellet.getUnlocalizedName());
 		GameRegistry.registerItem(mm_termicunit, mm_termicunit.getUnlocalizedName());
 		GameRegistry.registerItem(mm_pelletholder, mm_pelletholder.getUnlocalizedName());

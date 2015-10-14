@@ -23,6 +23,11 @@ public class EntityMiniMobPig extends EntityMiniMobBase
 		this.setCombatTask();
 	}
 	
+	public int getType()
+	{
+		return 0;
+	}
+	
 	public void setCombatTask()
 	{
 		this.tasks.addTask(4, this.aiLeapAtTarget);

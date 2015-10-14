@@ -27,6 +27,11 @@ public class EntityMiniMobCreeper extends EntityMiniMobBase
 		this.setCombatTask();
 	}
 	
+	public int getType()
+	{
+		return 3;
+	}
+	
 	public void setCombatTask()
 	{
 		this.tasks.addTask(4, this.aiAttackOnCollide);

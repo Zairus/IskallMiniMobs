@@ -47,6 +47,11 @@ public class EntityMiniMobSkeleton
 			this.setCombatTask();
 	}
 	
+	public int getType()
+	{
+		return 2;
+	}
+	
 	protected String getLivingSound()
 	{
 		return "mob.skeleton.say";

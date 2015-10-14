@@ -33,6 +33,11 @@ public class EntityMiniMobZombie extends EntityMiniMobBase
 		this.setCombatTask();
 	}
 	
+	public int getType()
+	{
+		return 1;
+	}
+	
 	@Override
 	public void applyMiniMobAttributes()
 	{

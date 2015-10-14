@@ -20,6 +20,7 @@ import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
@@ -30,8 +31,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import zairus.iskallminimobs.entity.ai.EntityAIFollowMaster;
 import zairus.iskallminimobs.entity.ai.EntityAIMasterHurtByTarget;
+import zairus.iskallminimobs.item.MMItems;
 
-public class EntityMiniMobBase
+public abstract class EntityMiniMobBase
 	extends EntityCreature
 	implements IMob
 {
@@ -457,6 +459,33 @@ public class EntityMiniMobBase
 		return true;
 	}
 	
+	public abstract int getType();
+	
+	@Override
+	public void onDeath(DamageSource source)
+	{
+		super.onDeath(source);
+		
+		if (!worldObj.isRemote)
+		{
+			ItemStack corpse = new ItemStack(MMItems.mm_corpse, 1, getType());
+			
+			NBTTagCompound data = getMiniMobData();
+			NBTTagCompound tag = corpse.getTagCompound();
+			
+			if (tag == null)
+				tag = new NBTTagCompound();
+			
+			corpse.setTagCompound(tag);
+			corpse.getTagCompound().setTag(MiniMobData.MOBDATA_KEY, data);
+			
+			if (this.hasCustomNameTag())
+				corpse.setStackDisplayName(this.getCustomNameTag() + "'s corpse");
+			
+			this.entityDropItem(corpse, 1);
+		}
+	}
+	
 	protected NBTTagList getItemList()
 	{
 		return new NBTTagList();
@@ -488,7 +517,7 @@ public class EntityMiniMobBase
 		data.setDouble(MiniMobData.LEVEL_KEY, this.level);
 		data.setDouble(MiniMobData.NEXTLEVEL_KEY, this.nextLevelUp);
 		
-		data.setInteger(MiniMobData.MOBTYPE_KEY, 0);
+		data.setInteger(MiniMobData.MOBTYPE_KEY, getType());
 		
 		data.setTag(MiniMobData.INVENTORY_KEY, nbttaglist);
 		

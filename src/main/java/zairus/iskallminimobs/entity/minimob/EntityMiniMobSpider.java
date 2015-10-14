@@ -27,6 +27,11 @@ public class EntityMiniMobSpider extends EntityMiniMobBase
 		this.setCombatTask();
 	}
 	
+	public int getType()
+	{
+		return 4;
+	}
+	
 	public void setCombatTask()
 	{
 		this.tasks.addTask(4, this.aiAttackOnCollide);
