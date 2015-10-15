@@ -1,5 +1,7 @@
 package zairus.iskallminimobs.tileentity;
 
+import java.util.UUID;
+
 import zairus.iskallminimobs.MMConstants;
 import zairus.iskallminimobs.entity.minimob.MiniMobData;
 import zairus.iskallminimobs.item.MMItems;
@@ -47,7 +49,7 @@ public class TileEntityMMIncubator
 			for (int i = 1; i < 17; ++i)
 			{
 				stack = this.getStackInSlot(i);
-				if (stack != null && stack.getItem() == MMItems.mm_embrio)
+				if (stack != null && stack.getItem() == MMItems.mm_embrio && isStackReady(stack))
 				{
 					if (!stack.hasTagCompound())
 						stack.setTagCompound(new NBTTagCompound());
@@ -92,11 +94,29 @@ public class TileEntityMMIncubator
 		}
 	}
 	
+	private boolean isStackReady(ItemStack stack)
+	{
+		if (stack.getItemDamage() == 5)
+		{
+			if (!stack.hasDisplayName())
+				return false;
+		}
+		
+		return true;
+	}
+	
 	private NBTTagCompound defaultMiniMobData(ItemStack stack)
 	{
 		NBTTagCompound data = new NBTTagCompound();
 		
 		data.setInteger(MiniMobData.MOBTYPE_KEY, stack.getItemDamage());
+		
+		if (stack.getItemDamage() == 5)
+		{
+			data.setString(MiniMobData.CUSTOMNAME_KEY, stack.getDisplayName());
+		}
+		
+		data.setString(MiniMobData.UUID_KEY, UUID.randomUUID().toString());
 		
 		data.setInteger(MiniMobData.LEVEL_KEY, 0);
 		data.setDouble(MiniMobData.EXPERIENCE_KEY, 0);

@@ -10,6 +10,7 @@ import zairus.iskallminimobs.entity.minimob.EntityMiniMobBase;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobCreeper;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobPig;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSkeleton;
+import zairus.iskallminimobs.entity.minimob.EntityMiniMobSoldier;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSpider;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobZombie;
 import zairus.iskallminimobs.entity.minimob.MiniMobData;
@@ -82,6 +83,9 @@ public class EntityMMPellet
 				break;
 			case 4:
 				miniMob = new EntityMiniMobSpider(worldObj);
+				break;
+			case 5:
+				miniMob = new EntityMiniMobSoldier(worldObj);
 				break;
 			default:
 				miniMob = new EntityMiniMobPig(worldObj);

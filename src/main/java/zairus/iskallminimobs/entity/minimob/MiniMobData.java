@@ -14,4 +14,5 @@ public class MiniMobData
 	public static final String NEXTLEVEL_KEY = "nextLevel";
 	public static final String INVENTORY_KEY = "Items";
 	public static final String CUSTOMNAME_KEY = "CustomName";
+	public static final String UUID_KEY = "miniMobUUID";
 }

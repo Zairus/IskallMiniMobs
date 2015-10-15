@@ -50,6 +50,8 @@ public abstract class EntityMiniMobBase
 	public int level = 0;
 	public double nextLevelUp = 10.0D;
 	
+	private String miniMobUUID;
+	
 	public EntityMiniMobBase(World world)
 	{
 		super(world);
@@ -92,6 +94,8 @@ public abstract class EntityMiniMobBase
 	public void applyAttributesFromNBT(NBTTagCompound data)
 	{
 		NBTTagList nbttaglist = data.getTagList(MiniMobData.INVENTORY_KEY, 10);
+		
+		this.miniMobUUID = data.getString(MiniMobData.UUID_KEY);
 		
 		if (data.hasKey(MiniMobData.CUSTOMNAME_KEY))
 		{
@@ -183,6 +187,48 @@ public abstract class EntityMiniMobBase
 		{
 			return false;
 		}
+	}
+	
+	public String getMiniMobName()
+	{
+		String name;
+		
+		if (this.hasCustomNameTag())
+			name = this.getCustomNameTag();
+		else
+		{
+			switch (this.getType())
+			{
+			case 1:
+				name = "Mini Zombie";
+				break;
+			case 2:
+				name = "Mini Skeleton";
+				break;
+			case 3:
+				name = "Mini Creeper";
+				break;
+			case 4:
+				name = "Mini Spider";
+				break;
+			case 5:
+				name = "Mini Soldier";
+				break;
+			default:
+				name = "Mini Pig";
+				break;
+			}
+		}
+		
+		return name;
+	}
+	
+	public String getMiniMobUUID()
+	{
+		if (this.miniMobUUID == null || this.miniMobUUID == "")
+			this.miniMobUUID = UUID.randomUUID().toString();
+		
+		return this.miniMobUUID;
 	}
 	
 	protected String getHurtSound()
@@ -503,6 +549,13 @@ public abstract class EntityMiniMobBase
 		
 		data.setString("OwnerUUID", this.getOwnerUUID());
 		
+		if (this.miniMobUUID == null || this.miniMobUUID == "")
+		{
+			this.miniMobUUID = UUID.randomUUID().toString();
+		}
+		
+		data.setString(MiniMobData.UUID_KEY, this.miniMobUUID);
+		
 		if (this.hasCustomNameTag())
 		{
 			data.setString(MiniMobData.CUSTOMNAME_KEY, this.getCustomNameTag());
@@ -542,6 +595,7 @@ public abstract class EntityMiniMobBase
 			tag.setString(MiniMobData.CUSTOMNAME_KEY, this.getCustomNameTag());
 		}
 		
+		tag.setString(MiniMobData.UUID_KEY, this.miniMobUUID);
 		tag.setDouble(MiniMobData.SPEED_KEY, this.speedCurrent);
 		tag.setDouble(MiniMobData.HEALTH_KEY, this.healthCurrent);
 		tag.setDouble(MiniMobData.FOLLOW_KEY, this.followRangeCurrent);
@@ -579,6 +633,9 @@ public abstract class EntityMiniMobBase
 			this.setOwnerUUID(s);
 			this.setTamed(true);
 		}
+		
+		if (tag.hasKey(MiniMobData.UUID_KEY))
+			this.miniMobUUID = tag.getString(MiniMobData.UUID_KEY);
 		
 		if (tag.hasKey(MiniMobData.SPEED_KEY))
 			this.speedCurrent = tag.getDouble(MiniMobData.SPEED_KEY);

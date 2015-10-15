@@ -20,7 +20,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 
-public class EntityMiniMobZombie extends EntityMiniMobBase
+public class EntityMiniMobZombie
+	extends EntityMiniMobBase
 {
 	private EntityAIAttackOnCollide aiAttackOnCollide = new EntityAIAttackOnCollide((EntityCreature) this, EntityMob.class, 1.2D, false);
 	

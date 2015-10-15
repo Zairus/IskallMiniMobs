@@ -7,12 +7,14 @@ import zairus.iskallminimobs.client.render.entity.RenderMMPellet;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobCreeper;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobPig;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobSkeleton;
+import zairus.iskallminimobs.client.render.entity.RenderMiniMobSoldier;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobSpider;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobZombie;
 import zairus.iskallminimobs.client.render.item.RenderItemMMPellet;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobCreeper;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobPig;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSkeleton;
+import zairus.iskallminimobs.entity.minimob.EntityMiniMobSoldier;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSpider;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobZombie;
 import zairus.iskallminimobs.entity.projectile.EntityMMPellet;
@@ -44,6 +46,7 @@ public class ClientProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSkeleton.class, new RenderMiniMobSkeleton());
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobCreeper.class, new RenderMiniMobCreeper());
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSpider.class, new RenderMiniMobSpider());
+		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSoldier.class, new RenderMiniMobSoldier());
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityMMPellet.class, new RenderMMPellet());
 		
