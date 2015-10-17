@@ -32,6 +32,9 @@ public class EntityMiniMobZombie
 		this.setSize(0.3F, 0.5F);
 		
 		this.setCombatTask();
+		
+		this.canEquipArmor = true;
+		this.canWeildWeapon = true;
 	}
 	
 	public int getType()

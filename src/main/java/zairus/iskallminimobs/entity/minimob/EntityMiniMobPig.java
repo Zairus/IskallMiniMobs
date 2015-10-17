@@ -21,6 +21,9 @@ public class EntityMiniMobPig extends EntityMiniMobBase
 		this.setSize(0.45F, 0.45F);
 		
 		this.setCombatTask();
+		
+		this.canEquipArmor = false;
+		this.canWeildWeapon = false;
 	}
 	
 	public int getType()

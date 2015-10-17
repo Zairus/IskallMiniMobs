@@ -45,6 +45,9 @@ public class EntityMiniMobSkeleton
 		
 		if (world != null && !world.isRemote)
 			this.setCombatTask();
+		
+		this.canEquipArmor = true;
+		this.canWeildWeapon = true;
 	}
 	
 	public int getType()
@@ -275,6 +278,8 @@ public class EntityMiniMobSkeleton
 		{
 			entityarrow.setFire(100);
 		}
+		
+		entityarrow.shootingEntity = this.getOwner();
 		
 		this.playSound("random.bow", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 		this.worldObj.spawnEntityInWorld(entityarrow);

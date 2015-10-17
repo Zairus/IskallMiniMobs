@@ -18,9 +18,14 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
@@ -29,18 +34,20 @@ import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import zairus.iskallminimobs.IskallMiniMobs;
 import zairus.iskallminimobs.entity.ai.EntityAIFollowMaster;
 import zairus.iskallminimobs.entity.ai.EntityAIMasterHurtByTarget;
+import zairus.iskallminimobs.inventory.InventoryMiniMob;
 import zairus.iskallminimobs.item.MMItems;
 
 public abstract class EntityMiniMobBase
 	extends EntityCreature
-	implements IMob
+	implements IMob, IInventory
 {
 	public double speedCurrent = 0.20D;
 	public double speedMax = 0.50D;
 	public double healthCurrent = 10.0D;
-	public double healthMax = 80.0D;
+	public double healthMax = 96.0D;
 	public double followRangeCurrent = 15.0D;
 	public double followRangeMax = 20.0D;
 	public double attackDamageCurrent = 1.0D;
@@ -49,8 +56,13 @@ public abstract class EntityMiniMobBase
 	public double experience = 0.0D;
 	public int level = 0;
 	public double nextLevelUp = 10.0D;
+	public InventoryMiniMob inventory = new InventoryMiniMob();
+	public int actionRequested = 0;
 	
 	private String miniMobUUID;
+	
+	protected boolean canEquipArmor = false;
+	protected boolean canWeildWeapon = false;
 	
 	public EntityMiniMobBase(World world)
 	{
@@ -65,12 +77,16 @@ public abstract class EntityMiniMobBase
 		this.tasks.addTask(3, new EntityAIWander(this, 0.6D));
 		
 		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		this.tasks.addTask(9, new EntityAILookIdle(this));
-		this.tasks.addTask(10, new EntityAINearestAttackableTarget(this, EntityMob.class, 0, true));
+		this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityMob.class, 8.0F));
+		this.tasks.addTask(10, new EntityAIWatchClosest(this, EntitySlime.class, 8.0F));
+		this.tasks.addTask(11, new EntityAILookIdle(this));
+		this.tasks.addTask(12, new EntityAINearestAttackableTarget(this, EntityMob.class, 0, true));
+		this.tasks.addTask(13, new EntityAINearestAttackableTarget(this, EntitySlime.class, 0, true));
 		
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAIMasterHurtByTarget(this));
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityMob.class, 0, true));
+		this.targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntitySlime.class, 0, true));
 		
 		applyMiniMobAttributes();
 	}
@@ -83,7 +99,7 @@ public abstract class EntityMiniMobBase
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
 	}
 	
-	public void applyMiniMobAttributes()
+	protected void applyMiniMobAttributes()
 	{
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(this.speedCurrent);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.healthCurrent);
@@ -94,6 +110,7 @@ public abstract class EntityMiniMobBase
 	public void applyAttributesFromNBT(NBTTagCompound data)
 	{
 		NBTTagList nbttaglist = data.getTagList(MiniMobData.INVENTORY_KEY, 10);
+		NBTTagList inv = data.getTagList(MiniMobData.INVENTORY_EX_KEY, 10);
 		
 		this.miniMobUUID = data.getString(MiniMobData.UUID_KEY);
 		
@@ -111,9 +128,14 @@ public abstract class EntityMiniMobBase
 		this.level = data.getInteger(MiniMobData.LEVEL_KEY);
 		this.nextLevelUp = data.getDouble(MiniMobData.NEXTLEVEL_KEY);
 		
-		setItemList(nbttaglist);
+		this.dataWatcher.updateObject(20, Integer.valueOf(this.level));
+		this.dataWatcher.updateObject(21, Float.valueOf((float)this.experience));
 		
-		applyMiniMobAttributes();
+		this.setItemList(nbttaglist);
+		this.setInventoryFromNBT(inv);
+		this.applyMiniMobAttributes();
+		
+		this.setHealth((float)this.getEntityAttribute(SharedMonsterAttributes.maxHealth).getBaseValue());
 	}
 	
 	public void equip() {}
@@ -137,8 +159,9 @@ public abstract class EntityMiniMobBase
 		
 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
 		this.dataWatcher.addObject(17, "");
-		
-		this.dataWatcher.addObject(13, new Byte((byte) 0));
+		this.dataWatcher.addObject(13, new Byte((byte)0));
+		this.dataWatcher.addObject(20, new Integer((int)0));
+		this.dataWatcher.addObject(21, new Float((float)0));
 	}
 	
 	public boolean isAIEnabled()
@@ -258,7 +281,8 @@ public abstract class EntityMiniMobBase
 			i += EnchantmentHelper.getKnockbackModifier(this, (EntityLivingBase) entity);
 		}
 		
-		boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), f);
+		boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), 0.001F);
+		flag = entity.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer)this.getOwner()), f);
 		
 		if (flag)
 		{
@@ -306,6 +330,7 @@ public abstract class EntityMiniMobBase
 	public void gainExperience(double exp)
 	{
 		this.experience += exp;
+		this.dataWatcher.updateObject(21, Float.valueOf((float)this.experience));
 		
 		if (this.nextLevelUp == 0)
 			this.nextLevelUp = 10.0D;
@@ -313,6 +338,7 @@ public abstract class EntityMiniMobBase
 		if (this.experience >= this.nextLevelUp)
 		{
 			++this.level;
+			this.dataWatcher.updateObject(20, Integer.valueOf(this.level));
 			this.nextLevelUp = this.nextLevelUp * 1.9D;
 			
 			if (!worldObj.isRemote)
@@ -389,7 +415,7 @@ public abstract class EntityMiniMobBase
 	public void onLivingUpdate()
 	{
 		this.updateArmSwingProgress();
-        
+		
 		super.onLivingUpdate();
 		
 		if (this.getOwner() == null)
@@ -404,20 +430,15 @@ public abstract class EntityMiniMobBase
 		}
 	}
 	
-	/*private void angerEnemies()
+	public int getCurrentLevel()
 	{
-		@SuppressWarnings("unchecked")
-		List<EntityMob> enemies = worldObj.getEntitiesWithinAABB(EntityMob.class, AxisAlignedBB.getBoundingBox(posX-16, posY-8, posZ-16, posX+16, posY+8, posZ+16));
-		
-		for (EntityMob enemy : enemies)
-		{
-			if (enemy.getAttackTarget() == null)
-			{
-				enemy.setTarget(this);
-				enemy.setRevengeTarget(this);
-			}
-		}
-	}*/
+		return this.dataWatcher.getWatchableObjectInt(20);
+	}
+	
+	public double getCurrentExperience()
+	{
+		return (double)this.dataWatcher.getWatchableObjectFloat(21);
+	}
 	
 	@Override
 	public void onUpdate()
@@ -508,6 +529,22 @@ public abstract class EntityMiniMobBase
 	public abstract int getType();
 	
 	@Override
+	protected boolean interact(EntityPlayer player)
+	{
+		if (player.isSneaking())
+		{
+			this.actionRequested = 1;
+			if (!this.worldObj.isRemote)
+			{
+				player.openGui(IskallMiniMobs.instance, 1, this.worldObj, (int)this.posX, (int)this.posY, (int)this.posZ);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	@Override
 	public void onDeath(DamageSource source)
 	{
 		super.onDeath(source);
@@ -542,6 +579,20 @@ public abstract class EntityMiniMobBase
 		;
 	}
 	
+	protected NBTTagList getInventoryToNBT()
+	{
+		NBTTagList inv = new NBTTagList();
+		
+		this.inventory.writeToNBT(inv);
+		
+		return inv;
+	}
+	
+	protected void setInventoryFromNBT(NBTTagList inv)
+	{
+		this.inventory.readFromNBT(inv);
+	}
+	
 	public NBTTagCompound getMiniMobData()
 	{
 		NBTTagCompound data = new NBTTagCompound();
@@ -573,6 +624,7 @@ public abstract class EntityMiniMobBase
 		data.setInteger(MiniMobData.MOBTYPE_KEY, getType());
 		
 		data.setTag(MiniMobData.INVENTORY_KEY, nbttaglist);
+		data.setTag(MiniMobData.INVENTORY_EX_KEY, this.getInventoryToNBT());
 		
 		return data;
 	}
@@ -606,6 +658,7 @@ public abstract class EntityMiniMobBase
 		tag.setDouble(MiniMobData.NEXTLEVEL_KEY, this.nextLevelUp);
 		
 		tag.setTag(MiniMobData.INVENTORY_KEY, nbttaglist);
+		tag.setTag(MiniMobData.INVENTORY_EX_KEY, this.getInventoryToNBT());
 	}
 	
 	public void readEntityFromNBT(NBTTagCompound tag)
@@ -613,6 +666,7 @@ public abstract class EntityMiniMobBase
 		super.readEntityFromNBT(tag);
 		String s = "";
 		NBTTagList nbttaglist = tag.getTagList(MiniMobData.INVENTORY_KEY, 10);
+		NBTTagList inv = tag.getTagList(MiniMobData.INVENTORY_EX_KEY, 10);
 		
 		if (tag.hasKey("OwnerUUID", 8))
 		{
@@ -658,6 +712,142 @@ public abstract class EntityMiniMobBase
 		if(tag.hasKey(MiniMobData.NEXTLEVEL_KEY))
 			this.nextLevelUp = tag.getDouble(MiniMobData.NEXTLEVEL_KEY);
 		
-		setItemList(nbttaglist);
+		this.dataWatcher.updateObject(20, Integer.valueOf(this.level));
+		this.dataWatcher.updateObject(21, Float.valueOf((float)this.experience));
+		
+		this.setItemList(nbttaglist);
+		this.setInventoryFromNBT(inv);
+	}
+	
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return 64;
+	}
+	
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	{
+		if (this.canWeildWeapon && slot == 0 && (stack.getItem() instanceof ItemBow || stack.getItem() instanceof ItemSword))
+		{
+			return true;
+		} else if (this.canEquipArmor && stack.getItem() instanceof ItemArmor) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot)
+	{
+		if (this.getEquipmentInSlot(slot) != null)
+		{
+			ItemStack itemstack = this.getEquipmentInSlot(slot);
+			this.setCurrentItemOrArmor(slot, null);
+			return itemstack;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer p_70300_1_)
+	{
+		return true;
+	}
+	private int numPlayersUsing = 0;
+	@Override
+	public void openInventory()
+	{
+		if (this.numPlayersUsing < 0)
+		{
+			this.numPlayersUsing = 0;
+        }
+		
+		++this.numPlayersUsing;
+	}
+	
+	@Override
+	public void closeInventory()
+	{
+		--this.numPlayersUsing;
+	}
+	
+	@Override
+	public String getInventoryName()
+	{
+		return "minimob.inventory";
+	}
+	
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack)
+	{
+		this.setCurrentItemOrArmor(slot, stack);
+		
+		if (stack != null && stack.stackSize > this.getInventoryStackLimit())
+		{
+			stack.stackSize = this.getInventoryStackLimit();
+		}
+		
+        this.markDirty();
+	}
+	
+	@Override
+	public boolean hasCustomInventoryName()
+	{
+		return false;
+	}
+	
+	@Override
+	public void markDirty()
+	{
+	}
+	
+	@Override
+	public int getSizeInventory()
+	{
+		return 5;
+	}
+	
+	@Override
+	public ItemStack getStackInSlot(int slot)
+	{
+		return this.getEquipmentInSlot(slot);
+	}
+	
+	@Override
+	public ItemStack decrStackSize(int slot, int size)
+	{
+		if (this.getEquipmentInSlot(slot) != null)
+		{
+			ItemStack itemstack;
+			
+			if (this.getEquipmentInSlot(slot).stackSize <= size)
+			{
+				itemstack = this.getEquipmentInSlot(slot);
+				this.setCurrentItemOrArmor(slot, null);
+				this.markDirty();
+				return itemstack;
+			}
+			else
+			{
+				itemstack = this.getEquipmentInSlot(slot).splitStack(size);
+				
+				if (this.getEquipmentInSlot(slot).stackSize == 0)
+				{
+					this.setCurrentItemOrArmor(slot, null);
+				}
+				
+				this.markDirty();
+				return itemstack;
+			}
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

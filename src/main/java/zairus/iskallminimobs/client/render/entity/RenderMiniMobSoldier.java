@@ -49,7 +49,7 @@ public class RenderMiniMobSoldier
 	
 	public RenderMiniMobSoldier()
 	{
-		super(new ModelBiped(0.0F), 0.5F);
+		super(new ModelBiped(0.0F), 0.2F);
 		
 		this.modelBipedMain = (ModelBiped) this.mainModel;
 		this.modelArmorChestplate = new ModelBiped(1.0F);
@@ -144,6 +144,10 @@ public class RenderMiniMobSoldier
 		{
 			d3 -= 0.125D;
 		}
+		
+		this.modelBipedMain.bipedHead.showModel = true;
+		this.modelBipedMain.bipedHeadwear.showModel = true;
+		this.shadowSize = 0.25F;
 		
 		super.doRender((EntityLivingBase) entity, p_76986_2_, d3, p_76986_6_, p_76986_8_, p_76986_9_);
 		
@@ -278,22 +282,22 @@ public class RenderMiniMobSoldier
 				GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
 				GL11.glScalef(-f2, -f2, f2);
 			} else if (itemstack1.getItem() == Items.bow) {
-				f2 = 0.425F;
-				GL11.glTranslatef(0.0F, 0.225F, 0.3125F);
+				f2 = 0.625F;
+				GL11.glTranslatef(-0.3F, -0.05F, 0.325F);
 				GL11.glRotatef(-20.0F, 0.0F, 1.0F, 0.0F);
 				GL11.glScalef(f2, -f2, f2);
 				GL11.glRotatef(-100.0F, 1.0F, 0.0F, 0.0F);
 				GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
 			} else if (itemstack1.getItem().isFull3D()) {
-				f2 = 0.35F;
+				f2 = 0.65F;
 				
 				if (itemstack1.getItem().shouldRotateAroundWhenRendering())
 				{
 					GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-					GL11.glTranslatef(0.0F, -0.125F, 0.0F);
+					GL11.glTranslatef(0.0F, 0.0F, 0.0F);
 				}
 				
-				GL11.glTranslatef(0.05F, 0.1875F, 0.1F);
+				GL11.glTranslatef(-0.125F, -0.125F, -0.125F);
 				GL11.glScalef(f2, -f2, f2);
 				GL11.glRotatef(-100.0F, 1.0F, 0.0F, 0.0F);
 				GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
@@ -340,7 +344,7 @@ public class RenderMiniMobSoldier
 	
 	protected void preRenderCallback(EntityMiniMobSoldier p_77041_1_, float p_77041_2_)
 	{
-		float f1 = 0.85F;
+		float f1 = 0.4F;
 		GL11.glScalef(f1, f1, f1);
 	}
 	

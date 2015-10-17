@@ -142,13 +142,13 @@ public class TileEntityMMIncubator
 	}
 	
 	@Override
-	public ItemStack decrStackSize(int slot, int p_70298_2_)
+	public ItemStack decrStackSize(int slot, int size)
 	{
 		if (this.contents[slot] != null)
 		{
 			ItemStack itemstack;
 			
-			if (this.contents[slot].stackSize <= p_70298_2_)
+			if (this.contents[slot].stackSize <= size)
 			{
 				itemstack = this.contents[slot];
 				this.contents[slot] = null;
@@ -157,7 +157,7 @@ public class TileEntityMMIncubator
 			}
 			else
 			{
-				itemstack = this.contents[slot].splitStack(p_70298_2_);
+				itemstack = this.contents[slot].splitStack(size);
 				
 				if (this.contents[slot].stackSize == 0)
 				{

@@ -14,7 +14,8 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class EntityMiniMobCreeper extends EntityMiniMobBase
+public class EntityMiniMobCreeper
+	extends EntityMiniMobBase
 {
 	private EntityAIAttackOnCollide aiAttackOnCollide = new EntityAIAttackOnCollide((EntityCreature) this, EntityMob.class, 1.2D, false);
 	
@@ -25,6 +26,9 @@ public class EntityMiniMobCreeper extends EntityMiniMobBase
 		this.setSize(0.35F, 0.45F);
 		
 		this.setCombatTask();
+		
+		this.canEquipArmor = false;
+		this.canWeildWeapon = false;
 	}
 	
 	public int getType()

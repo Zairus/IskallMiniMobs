@@ -98,7 +98,7 @@ public class MMPellet
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity)
 	{
-		if (containsMiniMob(stack))
+		if (containsMiniMob(stack) || player.isSneaking())
 			return false;
 		
 		if (entity instanceof EntityMiniMobBase)

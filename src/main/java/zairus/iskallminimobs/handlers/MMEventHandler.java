@@ -31,12 +31,16 @@ public class MMEventHandler
 			if (ev.entity instanceof EntitySkeleton)
 			{
 				if (((EntitySkeleton)ev.entity).getSkeletonType() == 0)
+				{
+					EntitySkeleton entity = (EntitySkeleton)ev.entity;
+					entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget(entity, EntityMiniMobBase.class, 5, false));
 					return;
+				}
 			}
 			
 			EntityMob entity = (EntityMob)ev.entity;
-			entity.tasks.addTask(3, new EntityAIAttackOnCollide(entity, EntityMiniMobBase.class, 0.8F, true));
-			entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget(entity, EntityMiniMobBase.class, 0, true));
+			entity.tasks.addTask(3, new EntityAIAttackOnCollide(entity, EntityMiniMobBase.class, 0.8F, false));
+			entity.targetTasks.addTask(2, new EntityAINearestAttackableTarget(entity, EntityMiniMobBase.class, 5, false));
 		}
 	}
 }

@@ -36,7 +36,7 @@ public class EntityMiniMobSoldier
 	
 	private final GameProfile gameProfile;
 	private EntityAIArrowAttack aiArrowAttack = new EntityAIArrowAttack(this, 1.0D, 20, 60, 15.0F);
-	private EntityAIAttackOnCollide aiAttackOnCollide = new EntityAIAttackOnCollide((EntityCreature) this, EntityMob.class, 1.2D, false);
+	private EntityAIAttackOnCollide aiAttackOnCollide = new EntityAIAttackOnCollide((EntityCreature) this, EntityMob.class, 1.5D, true);
 	private int combatStat = 0;
 	
 	public EntityMiniMobSoldier(World world)
@@ -46,10 +46,13 @@ public class EntityMiniMobSoldier
 		this.gameProfile = new GameProfile(null, "Winter_Grave");
 		this.playerUUID = EntityMiniMobSoldier.getPlayerUUID(gameProfile);
 		
-		this.setSize(0.3F, 0.5F);
+		this.setSize(0.6F, 0.5F);
 		
 		if (world != null && !world.isRemote)
 			this.setCombatTask();
+		
+		this.canEquipArmor = true;
+		this.canWeildWeapon = true;
 	}
 	
 	public int getType()
@@ -77,8 +80,6 @@ public class EntityMiniMobSoldier
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(this.followRangeCurrent * 2.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(this.healthCurrent * 1.10D);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(this.attackDamageCurrent * 1.20D);
-		
-		//if (this.worldObj != null && !this.worldObj.isRemote) this.setCombatTask();
 	}
 	
 	public int getTotalArmorValue()
@@ -132,6 +133,12 @@ public class EntityMiniMobSoldier
 	}
 	
 	@Override
+	public boolean isChild()
+	{
+		return false;
+	}
+	
+	@Override
 	public boolean attackEntityAsMob(Entity entity)
 	{
 		return super.attackEntityAsMob(entity);
@@ -172,6 +179,8 @@ public class EntityMiniMobSoldier
 		{
 			entityarrow.setFire(100);
 		}
+		
+		entityarrow.shootingEntity = this.getOwner();
 		
 		this.playSound("random.bow", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
 		this.worldObj.spawnEntityInWorld(entityarrow);
