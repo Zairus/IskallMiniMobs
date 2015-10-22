@@ -15,6 +15,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntityMob;
@@ -59,10 +60,16 @@ public abstract class EntityMiniMobBase
 	public InventoryMiniMob inventory = new InventoryMiniMob();
 	public int actionRequested = 0;
 	
-	private String miniMobUUID;
+	public static final int DATA_LEVEL = 20;
+	public static final int DATA_XP_CURRENT = 21;
+	public static final int DATA_XP_NEXTLEVELUP = 22;
+	public static final int DATA_SPEED = 23;
+	public static final int DATA_DAMAGE = 24;
 	
 	protected boolean canEquipArmor = false;
 	protected boolean canWeildWeapon = false;
+	
+	private String miniMobUUID;
 	
 	public EntityMiniMobBase(World world)
 	{
@@ -128,8 +135,11 @@ public abstract class EntityMiniMobBase
 		this.level = data.getInteger(MiniMobData.LEVEL_KEY);
 		this.nextLevelUp = data.getDouble(MiniMobData.NEXTLEVEL_KEY);
 		
-		this.dataWatcher.updateObject(20, Integer.valueOf(this.level));
-		this.dataWatcher.updateObject(21, Float.valueOf((float)this.experience));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_LEVEL, Float.valueOf((float)this.level));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_XP_CURRENT, Float.valueOf((float)this.experience));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_XP_NEXTLEVELUP, Float.valueOf((float)this.nextLevelUp));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_SPEED, Float.valueOf((float)this.speedCurrent));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_DAMAGE, Float.valueOf((float)this.attackDamageCurrent));
 		
 		this.setItemList(nbttaglist);
 		this.setInventoryFromNBT(inv);
@@ -160,8 +170,17 @@ public abstract class EntityMiniMobBase
 		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
 		this.dataWatcher.addObject(17, "");
 		this.dataWatcher.addObject(13, new Byte((byte)0));
-		this.dataWatcher.addObject(20, new Integer((int)0));
-		this.dataWatcher.addObject(21, new Float((float)0));
+		
+		this.dataWatcher.addObject(EntityMiniMobBase.DATA_LEVEL, new Float((float)0));
+		this.dataWatcher.addObject(EntityMiniMobBase.DATA_XP_CURRENT, new Float((float)0));
+		this.dataWatcher.addObject(EntityMiniMobBase.DATA_XP_NEXTLEVELUP, new Float((float)0));
+		this.dataWatcher.addObject(EntityMiniMobBase.DATA_SPEED, new Float((float)0));
+		this.dataWatcher.addObject(EntityMiniMobBase.DATA_DAMAGE, new Float((float)0));
+	}
+	
+	public float getDataValue(int index)
+	{
+		return this.dataWatcher.getWatchableObjectFloat(index);
 	}
 	
 	public boolean isAIEnabled()
@@ -330,16 +349,20 @@ public abstract class EntityMiniMobBase
 	public void gainExperience(double exp)
 	{
 		this.experience += exp;
-		this.dataWatcher.updateObject(21, Float.valueOf((float)this.experience));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_XP_CURRENT, Float.valueOf((float)this.experience));
 		
 		if (this.nextLevelUp == 0)
+		{
 			this.nextLevelUp = 10.0D;
+			this.dataWatcher.updateObject(EntityMiniMobBase.DATA_XP_NEXTLEVELUP, Float.valueOf((float)this.nextLevelUp));
+		}
 		
 		if (this.experience >= this.nextLevelUp)
 		{
 			++this.level;
-			this.dataWatcher.updateObject(20, Integer.valueOf(this.level));
+			this.dataWatcher.updateObject(EntityMiniMobBase.DATA_LEVEL, Float.valueOf((float)this.level));
 			this.nextLevelUp = this.nextLevelUp * 1.9D;
+			this.dataWatcher.updateObject(EntityMiniMobBase.DATA_XP_NEXTLEVELUP, Float.valueOf((float)this.nextLevelUp));
 			
 			if (!worldObj.isRemote)
 			{
@@ -350,6 +373,8 @@ public abstract class EntityMiniMobBase
 			this.speedCurrent += 0.05D;
 			if (this.speedCurrent > this.speedMax)
 				this.speedCurrent = this.speedMax;
+			
+			this.dataWatcher.updateObject(EntityMiniMobBase.DATA_SPEED, Float.valueOf((float)this.speedCurrent));
 			
 			this.healthCurrent += 1.0D;
 			if (this.healthCurrent > this.healthMax)
@@ -362,6 +387,8 @@ public abstract class EntityMiniMobBase
 			this.attackDamageCurrent += 0.02D;
 			if (this.attackDamageCurrent > this.attackDamageMax)
 				this.attackDamageCurrent = this.attackDamageMax;
+			
+			this.dataWatcher.updateObject(EntityMiniMobBase.DATA_DAMAGE, Float.valueOf((float)this.attackDamageCurrent));
 			
 			applyMiniMobAttributes();
 			
@@ -412,6 +439,11 @@ public abstract class EntityMiniMobBase
 		return 0.5F - this.worldObj.getLightBrightness(p_70783_1_, p_70783_2_, p_70783_3_);
 	}
 	
+	protected void setCombatTask()
+	{
+		;
+	}
+	
 	public void onLivingUpdate()
 	{
 		this.updateArmSwingProgress();
@@ -428,16 +460,48 @@ public abstract class EntityMiniMobBase
 				this.setTamed(true);
 			}
 		}
-	}
-	
-	public int getCurrentLevel()
-	{
-		return this.dataWatcher.getWatchableObjectInt(20);
-	}
-	
-	public double getCurrentExperience()
-	{
-		return (double)this.dataWatcher.getWatchableObjectFloat(21);
+		
+		this.worldObj.theProfiler.startSection("looting");
+		
+		if (!this.worldObj.isRemote && !this.dead)
+		{
+			@SuppressWarnings("rawtypes")
+			List list = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1.0D, 0.0D, 1.0D));
+			@SuppressWarnings("rawtypes")
+			Iterator iterator = list.iterator();
+			
+			while (iterator.hasNext())
+			{
+				EntityItem entityitem = (EntityItem)iterator.next();
+				if (!entityitem.isDead && entityitem.getEntityItem() != null)
+				{
+					ItemStack itemstack = entityitem.getEntityItem();
+					int i = getArmorPosition(itemstack);
+					
+					if (
+							(i > 0 && i < 5 && this.canEquipArmor) 
+							|| (i == 0 && this.canWeildWeapon && (itemstack.getItem() instanceof ItemSword || itemstack.getItem() instanceof ItemBow)))
+					{
+						ItemStack itemstack1 = this.getEquipmentInSlot(i);
+						if (itemstack1 == null)
+						{
+							this.setCurrentItemOrArmor(i, itemstack);
+							entityitem.setDead();
+							this.setCombatTask();
+						} else if (this.inventory.addItemStackToInventory(itemstack)) {
+							entityitem.setDead();
+						}
+					}
+					else
+					{
+						if (this.inventory.addItemStackToInventory(itemstack))
+							entityitem.setDead();
+					}
+				}
+			}
+		}
+		
+		this.worldObj.theProfiler.endSection();
 	}
 	
 	@Override
@@ -566,6 +630,22 @@ public abstract class EntityMiniMobBase
 				corpse.setStackDisplayName(this.getCustomNameTag() + "'s corpse");
 			
 			this.entityDropItem(corpse, 1);
+			
+			for (int i = 0; i < 5; ++i)
+			{
+				if (this.getEquipmentInSlot(i) != null)
+				{
+					this.entityDropItem(this.getEquipmentInSlot(i), 1);
+				}
+			}
+			
+			for (int i = 0; i < this.inventory.getSizeInventory(); ++i)
+			{
+				if (this.inventory.getStackInSlot(i) != null)
+				{
+					this.entityDropItem(this.inventory.getStackInSlot(i), 1);
+				}
+			}
 		}
 	}
 	
@@ -712,8 +792,11 @@ public abstract class EntityMiniMobBase
 		if(tag.hasKey(MiniMobData.NEXTLEVEL_KEY))
 			this.nextLevelUp = tag.getDouble(MiniMobData.NEXTLEVEL_KEY);
 		
-		this.dataWatcher.updateObject(20, Integer.valueOf(this.level));
-		this.dataWatcher.updateObject(21, Float.valueOf((float)this.experience));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_LEVEL, Float.valueOf((float)this.level));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_XP_CURRENT, Float.valueOf((float)this.experience));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_XP_NEXTLEVELUP, Float.valueOf((float)this.nextLevelUp));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_SPEED, Float.valueOf((float)this.speedCurrent));
+		this.dataWatcher.updateObject(EntityMiniMobBase.DATA_DAMAGE, Float.valueOf((float)this.attackDamageCurrent));
 		
 		this.setItemList(nbttaglist);
 		this.setInventoryFromNBT(inv);

@@ -81,5 +81,59 @@ public class MMCraftingHandler
 					,'t'
 					,MMItems.mm_termicunit
 				});
+		
+		GameRegistry.addShapedRecipe(
+				new ItemStack(MMBlocks.mm_dnaextractor)
+				, new Object[] {
+					"ggg"
+					,"ppp"
+					,"iti"
+					,'g'
+					,Blocks.glass
+					,'i'
+					,Items.iron_ingot
+					,'p'
+					,MMItems.mm_pelletholder
+					,'t'
+					,MMItems.mm_termicunit
+				});
+		
+		GameRegistry.addShapedRecipe(
+				new ItemStack(MMBlocks.mm_namingstation)
+				, new Object[] {
+					"fop"
+					,"sss"
+					,"wbw"
+					,'f'
+					,Items.feather
+					,'o'
+					,Items.flower_pot
+					,'p'
+					,Items.paper
+					,'s'
+					,Blocks.wooden_slab
+					,'w'
+					,Blocks.planks
+					,'b'
+					,Items.bucket
+				});
+		
+		GameRegistry.addShapedRecipe(
+				new ItemStack(MMBlocks.mm_powerprovider)
+				, new Object[] {
+					"rgr"
+					,"idi"
+					,"iti"
+					,'r'
+					,Items.redstone
+					,'g'
+					,Blocks.glass
+					,'i'
+					,Blocks.iron_block
+					,'d'
+					,Blocks.glowstone
+					,'t'
+					,MMItems.mm_termicunit
+				});
 	}
 }

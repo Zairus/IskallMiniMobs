@@ -12,11 +12,8 @@ import zairus.iskallminimobs.tileentity.TileEntityMMIncubator;
 public class ContainerMMIncubator
 	extends ContainerMMBase
 {
-	//private final TileEntityMMIncubator inventory;
-	
 	public ContainerMMIncubator(InventoryPlayer playerInv, TileEntityMMIncubator inv, World world)
 	{
-		//this.inventory = inv;
 		super(inv);
 		
 		inv.openInventory();

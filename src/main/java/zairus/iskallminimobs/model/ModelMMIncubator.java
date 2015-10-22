@@ -90,7 +90,6 @@ public class ModelMMIncubator
 		
 		GL11.glEnable(GL11.GL_BLEND);
 		Cover.render(f5);
-		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	private void setRotation(ModelRenderer model, float x, float y, float z)

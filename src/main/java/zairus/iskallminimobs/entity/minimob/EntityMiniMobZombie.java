@@ -126,7 +126,7 @@ public class EntityMiniMobZombie
 	@Override
 	public void equip()
 	{
-		this.setCanPickUpLoot(true);
+		this.setCanPickUpLoot(false);
 		
 		this.addRandomArmor();
 		this.enchantEquipment();

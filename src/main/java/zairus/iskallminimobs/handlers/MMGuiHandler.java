@@ -7,11 +7,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobBase;
+import zairus.iskallminimobs.gui.GuiMMDNAExtractor;
 import zairus.iskallminimobs.gui.GuiMMIncubator;
 import zairus.iskallminimobs.gui.GuiMMInventory;
+import zairus.iskallminimobs.gui.GuiMMNamingStation;
+import zairus.iskallminimobs.inventory.ContainerMMDNAExtractor;
 import zairus.iskallminimobs.inventory.ContainerMMIncubator;
+import zairus.iskallminimobs.inventory.ContainerMMNamingStation;
 import zairus.iskallminimobs.inventory.ContainerMiniMob;
+import zairus.iskallminimobs.tileentity.TileEntityMMDNAExtractor;
 import zairus.iskallminimobs.tileentity.TileEntityMMIncubator;
+import zairus.iskallminimobs.tileentity.TileEntityMMNamingStation;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class MMGuiHandler
@@ -22,9 +28,22 @@ public class MMGuiHandler
 	{
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		
-		if (tileEntity != null && tileEntity instanceof TileEntityMMIncubator)
+		if (tileEntity != null)
 		{
-			return new ContainerMMIncubator(player.inventory, (TileEntityMMIncubator)tileEntity, world);
+			if (tileEntity instanceof TileEntityMMIncubator)
+			{
+				return new ContainerMMIncubator(player.inventory, (TileEntityMMIncubator)tileEntity, world);
+			}
+			
+			if (tileEntity instanceof TileEntityMMDNAExtractor)
+			{
+				return new ContainerMMDNAExtractor(player.inventory, (TileEntityMMDNAExtractor)tileEntity, world);
+			}
+			
+			if (tileEntity instanceof TileEntityMMNamingStation)
+			{
+				return new ContainerMMNamingStation(player.inventory, (TileEntityMMNamingStation)tileEntity, world);
+			}
 		}
 		
 		if (ID == 1)
@@ -51,9 +70,22 @@ public class MMGuiHandler
 	{
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		
-		if (tileEntity != null && tileEntity instanceof TileEntityMMIncubator)
+		if (tileEntity != null)
 		{
-			return new GuiMMIncubator(player.inventory, (TileEntityMMIncubator)tileEntity, world);
+			if (tileEntity instanceof TileEntityMMIncubator)
+			{
+				return new GuiMMIncubator(player.inventory, (TileEntityMMIncubator)tileEntity, world);
+			}
+			
+			if (tileEntity instanceof TileEntityMMDNAExtractor)
+			{
+				return new GuiMMDNAExtractor(player.inventory, (TileEntityMMDNAExtractor)tileEntity, world);
+			}
+			
+			if (tileEntity instanceof TileEntityMMNamingStation)
+			{
+				return new GuiMMNamingStation(player.inventory, (TileEntityMMNamingStation)tileEntity, world);
+			}
 		}
 		
 		if (ID == 1)

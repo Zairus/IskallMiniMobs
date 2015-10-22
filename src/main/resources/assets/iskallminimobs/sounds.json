@@ -1,6 +1,43 @@
 {
-	"pellet_crack":
-	{
-		"category": "master","sounds": [{"name": "pellet_crack","stream": false}]
+	"pellet_crack": {
+		"category": "master"
+		,"sounds": [
+			{"name": "pellet_crack","stream": false}
+		]
+	}
+	,"namestation_open": {
+		"category": "master"
+		,"sounds": [
+			{"name": "namestation_open1","stream": false}
+			,{"name": "namestation_open2","stream": false}
+		]
+	}
+	,"namestation_close": {
+		"category": "master"
+		,"sounds": [
+			{"name": "namestation_close1","stream": false}
+		]
+	}
+	,"namestation_stamp": {
+		"category": "master"
+		,"sounds": [
+			{"name": "namestation_stamp1","stream": false}
+			,{"name": "namestation_stamp2","stream": false}
+			,{"name": "namestation_stamp3","stream": false}
+			,{"name": "namestation_stamp4","stream": false}
+		]
+	}
+	,"namestation_type": {
+		"category": "master"
+		,"sounds": [
+			{"name": "namestation_type1","stream": false}
+			,{"name": "namestation_type2","stream": false}
+			,{"name": "namestation_type3","stream": false}
+			,{"name": "namestation_type4","stream": false}
+			,{"name": "namestation_type5","stream": false}
+			,{"name": "namestation_type6","stream": false}
+			,{"name": "namestation_type7","stream": false}
+			,{"name": "namestation_type8","stream": false}
+		]
 	}
 }

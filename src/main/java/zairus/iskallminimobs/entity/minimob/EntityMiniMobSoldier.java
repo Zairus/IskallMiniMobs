@@ -1,7 +1,5 @@
 package zairus.iskallminimobs.entity.minimob;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.enchantment.Enchantment;
@@ -14,13 +12,10 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
@@ -192,44 +187,6 @@ public class EntityMiniMobSoldier
 		}
 		
 		gainExperience(1.5D);
-	}
-	
-	public void onLivingUpdate()
-	{
-		super.onLivingUpdate();
-		
-		this.worldObj.theProfiler.startSection("looting");
-		
-		if (!this.worldObj.isRemote && !this.dead)
-		{
-			@SuppressWarnings("rawtypes")
-			List list = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1.0D, 0.0D, 1.0D));
-			@SuppressWarnings("rawtypes")
-			Iterator iterator = list.iterator();
-			
-			while (iterator.hasNext())
-			{
-				EntityItem entityitem = (EntityItem)iterator.next();
-				if (!entityitem.isDead && entityitem.getEntityItem() != null)
-				{
-					ItemStack itemstack = entityitem.getEntityItem();
-					int i = getArmorPosition(itemstack);
-					
-					if (i > 0 || (i == 0 && (itemstack.getItem() instanceof ItemSword || itemstack.getItem() instanceof ItemBow)))
-					{
-						ItemStack itemstack1 = this.getEquipmentInSlot(i);
-						if (itemstack1 == null)
-						{
-							this.setCurrentItemOrArmor(i, itemstack);
-							entityitem.setDead();
-							this.setCombatTask();
-						}
-					}
-				}
-			}
-		}
-		
-		this.worldObj.theProfiler.endSection();
 	}
 	
 	protected void dropRareDrop(int p_70600_1_)

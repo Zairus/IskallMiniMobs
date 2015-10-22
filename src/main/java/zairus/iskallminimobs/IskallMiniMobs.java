@@ -11,6 +11,7 @@ import zairus.iskallminimobs.handlers.MMEventHandler;
 import zairus.iskallminimobs.handlers.MMGuiHandler;
 import zairus.iskallminimobs.item.MMItems;
 import zairus.iskallminimobs.proxy.CommonProxy;
+import zairus.iskallminimobs.util.network.PacketPipeline;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -25,7 +26,8 @@ public class IskallMiniMobs
 {
 	public static Logger logger;
     public static Configuration configuration;
-	
+    public static final PacketPipeline packetPipeline = new PacketPipeline();
+    
 	@SidedProxy(clientSide="zairus.iskallminimobs.proxy.ClientProxy", serverSide="zairus.iskallminimobs.proxy.ServerProxy")
 	public static CommonProxy proxy;
 	
@@ -57,6 +59,7 @@ public class IskallMiniMobs
     	MMEventHandler eventHandler = new MMEventHandler();
     	
     	IskallMiniMobs.proxy.init(event);
+    	packetPipeline.initalise();
     	
     	MMCraftingHandler.addCraftingRecipes();
     	
@@ -74,6 +77,7 @@ public class IskallMiniMobs
     public void postInit(FMLPostInitializationEvent event)
     {
     	IskallMiniMobs.proxy.postInit(event);
+    	packetPipeline.postInitialise();
     }
     
     public static void log(String obj)

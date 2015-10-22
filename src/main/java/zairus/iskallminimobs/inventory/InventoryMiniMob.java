@@ -1,10 +1,16 @@
 package zairus.iskallminimobs.inventory;
 
+import java.util.concurrent.Callable;
+
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ReportedException;
 
 public class InventoryMiniMob
 	implements IInventory
@@ -141,6 +147,174 @@ public class InventoryMiniMob
 	public boolean isItemValidForSlot(int slot, ItemStack stack)
 	{
 		return true;
+	}
+	
+	public int getFirstEmptyStack()
+	{
+		for (int i = 0; i < this.contents.length; ++i)
+		{
+			if (this.contents[i] == null)
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	private int storeItemStack(ItemStack stack)
+	{
+		for (int i = 0; i < this.contents.length; ++i)
+		{
+			if (
+					this.contents[i] != null 
+					&& this.contents[i].getItem() == stack.getItem() 
+					&& this.contents[i].isStackable() 
+					&& this.contents[i].stackSize < this.contents[i].getMaxStackSize() 
+					&& this.contents[i].stackSize < this.getInventoryStackLimit() 
+					&& (!this.contents[i].getHasSubtypes() || this.contents[i].getItemDamage() == stack.getItemDamage()) 
+					&& ItemStack.areItemStackTagsEqual(this.contents[i], stack))
+			{
+				return i;
+			}
+		}
+		
+		return -1;
+    }
+	
+	private int storePartialItemStack(ItemStack stack)
+	{
+		Item item = stack.getItem();
+		int i = stack.stackSize;
+		int j;
+		
+		if (stack.getMaxStackSize() == 1)
+		{
+			j = this.getFirstEmptyStack();
+			
+			if (j < 0)
+			{
+				return i;
+			}
+			else
+			{
+				if (this.contents[j] == null)
+				{
+					this.contents[j] = ItemStack.copyItemStack(stack);
+				}
+				
+				return 0;
+			}
+		}
+		else
+		{
+			j = this.storeItemStack(stack);
+			
+			if (j < 0)
+			{
+				j = this.getFirstEmptyStack();
+			}
+			
+			if (j < 0)
+			{
+				return i;
+			}
+			else
+			{
+				if (this.contents[j] == null)
+				{
+					this.contents[j] = new ItemStack(item, 0, stack.getItemDamage());
+					
+					if (stack.hasTagCompound())
+					{
+						this.contents[j].setTagCompound((NBTTagCompound)stack.getTagCompound().copy());
+					}
+				}
+				
+				int k = i;
+				
+				if (i > this.contents[j].getMaxStackSize() - this.contents[j].stackSize)
+				{
+					k = this.contents[j].getMaxStackSize() - this.contents[j].stackSize;
+				}
+				
+				if (k > this.getInventoryStackLimit() - this.contents[j].stackSize)
+				{
+					k = this.getInventoryStackLimit() - this.contents[j].stackSize;
+				}
+				
+				if (k == 0)
+				{
+					return i;
+				}
+				else
+				{
+					i -= k;
+					this.contents[j].stackSize += k;
+					this.contents[j].animationsToGo = 5;
+					return i;
+				}
+			}
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public boolean addItemStackToInventory(final ItemStack stack)
+	{
+		if (stack != null && stack.stackSize != 0 && stack.getItem() != null)
+		{
+			try
+			{
+				int i;
+				
+				if (stack.isItemDamaged())
+				{
+					i = this.getFirstEmptyStack();
+					
+					if (i >= 0)
+					{
+						this.contents[i] = ItemStack.copyItemStack(stack);
+						this.contents[i].animationsToGo = 5;
+						stack.stackSize = 0;
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					do
+					{
+						i = stack.stackSize;
+						stack.stackSize = this.storePartialItemStack(stack);
+					}
+					while (stack.stackSize > 0 && stack.stackSize < i);
+					
+					return stack.stackSize < i;
+				}
+			}
+			catch (Throwable throwable)
+			{
+				CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Adding item to inventory");
+				CrashReportCategory crashreportcategory = crashreport.makeCategory("Item being added");
+				crashreportcategory.addCrashSection("Item ID", Integer.valueOf(Item.getIdFromItem(stack.getItem())));
+				crashreportcategory.addCrashSection("Item data", Integer.valueOf(stack.getItemDamage()));
+				crashreportcategory.addCrashSectionCallable("Item name", new Callable()
+				{
+					public String call()
+					{
+						return stack.getDisplayName();
+					}
+				});
+				throw new ReportedException(crashreport);
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	public void writeToNBT(NBTTagList nbttaglist)

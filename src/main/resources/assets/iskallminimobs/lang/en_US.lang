@@ -23,3 +23,6 @@ item.mm_pelletpanel.name=MM Pellet Panel
 itemGroup.tabIskallMinimobs=Iskall Minimobs
 tile.mm_incubator.name=MM Incubator
 tile.mm_creativecell.name=MM Creative Energy Cell
+tile.mm_dnaextractor.name=MM DNA Extractor
+tile.mm_namingstation.name=MM Naming Station
+tile.mm_powerprovider.name=MM Power Provider

@@ -10,16 +10,20 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import zairus.iskallminimobs.MMConstants;
+import zairus.iskallminimobs.block.MMBlockContainer;
 import zairus.iskallminimobs.block.MMBlocks;
 import zairus.iskallminimobs.block.MMIncubator;
 import zairus.iskallminimobs.model.ModelMMIncubator;
+import zairus.iskallminimobs.tileentity.TileEntityMMBase;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class RenderMMIncubator
 	extends TileEntitySpecialRenderer
 	implements ISimpleBlockRenderingHandler
 {
-	ResourceLocation texture = new ResourceLocation(MMConstants.MODID, "textures/models/mm_incubator.png");
+	ResourceLocation[] textures = {
+			new ResourceLocation(MMConstants.MODID, "textures/models/mm_incubator.png")
+			,new ResourceLocation(MMConstants.MODID, "textures/models/mm_dnaextractor.png")};
 	
 	private ModelMMIncubator model;
 	
@@ -31,16 +35,16 @@ public class RenderMMIncubator
 	@Override
 	public void renderTileEntityAt(TileEntity entity, double x, double y, double z, float f)
 	{
-		renderIncubator(x, y, z, 0.5F, 1.5F, 0.5F, entity);
+		renderIncubator(x, y, z, 0.5F, 1.5F, 0.5F, entity, ((TileEntityMMBase)entity).getTextureIndex());
 	}
 	
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
-		renderIncubator(0.0D, 0.0D, 0.0D, 0.0F, 1.0F, 0.0F, null);
+		renderIncubator(0.0D, 0.0D, 0.0D, 0.0F, 1.0F, 0.0F, null, ((MMBlockContainer)block).getTextureIndex());
 	}
 	
-	private void renderIncubator(double x, double y, double z, float xIncrement, float yIncrement, float zIncrement, TileEntity entity)
+	private void renderIncubator(double x, double y, double z, float xIncrement, float yIncrement, float zIncrement, TileEntity entity, int textureIndex)
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)x + xIncrement, (float)y + yIncrement, (float)z + zIncrement);
@@ -69,7 +73,7 @@ public class RenderMMIncubator
 			GL11.glRotatef(180.0F, 1.0F, 800.0F, 1.0F);
 		}
 		
-		this.bindTexture(texture);
+		this.bindTexture(textures[textureIndex]);
 		
 		GL11.glPushMatrix();
 		this.model.renderModel(0.0625F);

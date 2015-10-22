@@ -3,6 +3,7 @@ package zairus.iskallminimobs.item;
 import java.util.List;
 
 import zairus.iskallminimobs.MMConstants;
+import zairus.iskallminimobs.entity.minimob.MiniMobData;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -78,6 +79,18 @@ public class MMEmbrio
 		{
 			if (tag.hasKey(completionKey))
 				list.add(completionKey + ": " + tag.getFloat(completionKey) + "%");
+			
+			if (tag.hasKey(MiniMobData.MOBDATA_KEY))
+			{
+				NBTTagCompound data = (NBTTagCompound)tag.getTag(MiniMobData.MOBDATA_KEY);
+				
+				list.add("level: " + data.getInteger(MiniMobData.LEVEL_KEY));
+				list.add("xp: " + data.getDouble(MiniMobData.EXPERIENCE_KEY));
+				list.add("speed: " + data.getDouble(MiniMobData.SPEED_KEY));
+				list.add("health: " + data.getDouble(MiniMobData.HEALTH_KEY));
+				list.add("range: " + data.getDouble(MiniMobData.FOLLOW_KEY));
+				list.add("attack: " + data.getDouble(MiniMobData.ATTACK_KEY));
+			}
 		}
     }
 }

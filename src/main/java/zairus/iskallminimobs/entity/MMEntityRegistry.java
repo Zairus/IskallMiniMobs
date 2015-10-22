@@ -13,7 +13,7 @@ public class MMEntityRegistry
 	
 	public static int getNextEntityId()
 	{
-		return registeredEntities.size();
+		return registeredEntities.size() + 500;
 	}
 	
 	public static int registerEntity(Class<? extends Entity> entityClass, String entityId, Object mod, int trackingTime, int updateFrecuency, boolean sendVelocityUpdates)

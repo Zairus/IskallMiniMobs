@@ -2,12 +2,18 @@ package zairus.iskallminimobs.tileentity;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import zairus.iskallminimobs.helpers.IMMEnergy;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
+import cpw.mods.fml.common.Optional;
 
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = "CoFHCore"),
+	@Optional.Interface(iface = "cofh.api.energy.IEnergyProvider", modid = "CoFHCore")
+})
 public class TileEntityMMCreativeCell
 	extends TileEntity
-	implements IEnergyProvider
+	implements IEnergyProvider, IMMEnergy
 {
 	private static final int energy = 10000000;
 	
@@ -23,7 +29,10 @@ public class TileEntityMMCreativeCell
 					, yCoord + ForgeDirection.getOrientation(i).offsetY
 					, zCoord + ForgeDirection.getOrientation(i).offsetZ);
 			
-			if (tile != null && tile instanceof IEnergyHandler)
+			if (tile != null && tile instanceof IMMEnergy)
+			{
+				((IMMEnergy)tile).receiveEnergy(ForgeDirection.UNKNOWN, 5, false);
+			}else if (tile != null && tile instanceof IEnergyHandler)
 			{
 				((IEnergyHandler)tile).receiveEnergy(ForgeDirection.UNKNOWN, 5, false);
 			}
@@ -39,7 +48,7 @@ public class TileEntityMMCreativeCell
 	@Override
 	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
 	{
-		return 1;
+		return maxExtract;
 	}
 	
 	@Override
@@ -52,5 +61,11 @@ public class TileEntityMMCreativeCell
 	public int getMaxEnergyStored(ForgeDirection from)
 	{
 		return energy;
+	}
+	
+	@Override
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
+	{
+		return 0;
 	}
 }

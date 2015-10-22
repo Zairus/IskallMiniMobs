@@ -63,6 +63,17 @@ public class ContainerMMBase
 		iIndex = placeSlotGrid(playerinv, iIndex, gridX, gridY, gridCols, gridRows);
 	}
 	
+	public void moveSlots(boolean down, int distance)
+	{
+		for (int i = 0; i < this.inventorySlots.size(); ++i)
+		{
+			if (down)
+				((Slot)this.inventorySlots.get(i)).yDisplayPosition += distance;
+			else
+				((Slot)this.inventorySlots.get(i)).yDisplayPosition -= distance;
+		}
+	}
+	
 	@Override
 	public ItemStack slotClick(int slot, int slotX, int slotY, EntityPlayer player)
 	{

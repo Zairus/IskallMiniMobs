@@ -96,11 +96,19 @@ public class GuiMMInventory
 		
 		int xpX = 85;
 		int xpY = 71;
+		float nextLev = this.miniMob.getDataValue(EntityMiniMobBase.DATA_XP_NEXTLEVELUP);
+		float prevLev = nextLev / 1.9F;
+		float progress = this.miniMob.getDataValue(EntityMiniMobBase.DATA_XP_CURRENT) - prevLev;
+		float percent = progress / (nextLev - prevLev);
+		int barProgress = ((int)(28.0F * percent));
+		
+		if (barProgress > 28)
+			barProgress = 28;
 		
 		for (int i = 0; i < 28; ++i)
 			this.drawTexturedModalRect((left + xpX) + (i * 3), top + xpY, 2, 175, 3, 4);
 		
-		for (int i = 0; i < 15; ++i)
+		for (int i = 0; i < barProgress; ++i)
 			this.drawTexturedModalRect((left + xpX) + (i * 3), top + xpY, 5, 175, 3, 4);
 		
 		int healthX = 85;
@@ -166,13 +174,19 @@ public class GuiMMInventory
 				break;
 		}
 		
-		String s = "lv: " + this.miniMob.getCurrentLevel();
+		//this.miniMob.getDataValue(EntityMiniMobBase.DATA_SPEED);
+		//this.miniMob.getDataValue(EntityMiniMobBase.DATA_DAMAGE);
+		
+		String s = "lv: " + ((int)this.miniMob.getDataValue(EntityMiniMobBase.DATA_LEVEL));
 		this.fontRendererObj.drawString(s, left + 28, top + 10, Color.WHITE.getRGB());
 		
-		s = "xp: " + (Math.round(this.miniMob.getCurrentExperience() * 100.0D) / 100.0D);
-		GL11.glScalef(0.75F, 0.75F, 0.75F);
-		this.fontRendererObj.drawString(s, left + 155, top + 95, 0);
-		GL11.glScalef(1.0F / 0.75F, 1.0F / 0.75F, 1.0F / 0.75F);
+		float scale = 0.75F;
+		GL11.glScalef(scale, scale, scale);
+		
+		s = "xp: " + (Math.round(this.miniMob.getDataValue(EntityMiniMobBase.DATA_XP_CURRENT) * 100.0D) / 100.0D);
+		this.fontRendererObj.drawString(s, (int)(left * (1 / scale)) + 115, (int)(top * (1 / scale)) + 86, 0);
+		
+		GL11.glScalef(1.0F / scale, 1.0F / scale, 1.0F / scale);
 	}
 	
 	public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)
