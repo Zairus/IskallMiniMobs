@@ -233,8 +233,15 @@ public class TileEntityMMNamingStation
 	{
 		super.setInventorySlotContents(slot, stack);
 		
+		if (slot == 16 && stack != null && this.itemName == "" && stack.hasDisplayName())
+		{
+			this.setItemName(stack.getDisplayName());
+		}
+		
 		if (slot == 16 && stack != null && this.itemName != "")
+		{
 			this.setItemName(this.itemName);
+		}
 	}
 	
 	public void setItemName(String name)

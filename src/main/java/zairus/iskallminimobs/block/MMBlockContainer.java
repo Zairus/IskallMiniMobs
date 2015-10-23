@@ -1,15 +1,17 @@
 package zairus.iskallminimobs.block;
 
-import zairus.iskallminimobs.IskallMiniMobs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import zairus.iskallminimobs.IskallMiniMobs;
 
 public abstract class MMBlockContainer
 	extends BlockContainer
@@ -83,29 +85,43 @@ public abstract class MMBlockContainer
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
 		byte b0 = 0;
-        int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-        
-        if (l == 0)
-        {
-            b0 = 2;
-        }
-        
-        if (l == 1)
-        {
-            b0 = 5;
-        }
-        
-        if (l == 2)
-        {
-            b0 = 3;
-        }
-        
-        if (l == 3)
-        {
-            b0 = 4;
-        }
-        
-        world.setBlockMetadataWithNotify(x, y, z, b0, 3);
+		int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		
+		if (l == 0)
+		{
+			b0 = 2;
+		}
+		
+		if (l == 1)
+		{
+			b0 = 5;
+		}
+		
+		if (l == 2)
+		{
+			b0 = 3;
+		}
+		
+		if (l == 3)
+		{
+			b0 = 4;
+		}
+		
+		world.setBlockMetadataWithNotify(x, y, z, b0, 3);
+		
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("MMEntity"))
+		{
+			NBTTagCompound entityData = stack.getTagCompound().getCompoundTag("MMEntity");
+			TileEntity tileEntity = world.getTileEntity(x, y, z);
+			
+			if (entityData != null)
+			{
+				tileEntity.readFromNBT(entityData);
+				tileEntity.xCoord = x;
+				tileEntity.yCoord = y;
+				tileEntity.zCoord = z;
+			}
+		}
 	}
 	
 	public boolean renderAsNormalBlock()
@@ -146,4 +162,31 @@ public abstract class MMBlockContainer
 			return true;
 		}
 	}
+	
+	@Override
+    public boolean removedByPlayer (World world, EntityPlayer player, int x, int y, int z, boolean harvest)
+    {
+		//return super.removedByPlayer(world, player, x, y, z);
+		
+		if (!world.isRemote && world.getGameRules().getGameRuleBooleanValue("doTileDrops"))
+		{
+			ItemStack stack = new ItemStack(this, 1);
+			NBTTagCompound entityData = new NBTTagCompound();
+			TileEntity entity = world.getTileEntity(x, y, z);
+			entity.writeToNBT(entityData);
+			NBTTagCompound stackData = new NBTTagCompound();
+			stackData.setTag("MMEntity", entityData);
+			stack.setTagCompound(stackData);
+			EntityItem entityitem = new EntityItem(world, x, y, z, stack);
+			world.spawnEntityInWorld(entityitem);
+		}
+		
+		return world.setBlockToAir(x, y, z);
+    }
+	
+	@Override
+    public void harvestBlock(World world, EntityPlayer player, int x, int y, int z, int i)
+    {
+		//super.harvestBlock(world, player, x, y, z, i);
+    }
 }

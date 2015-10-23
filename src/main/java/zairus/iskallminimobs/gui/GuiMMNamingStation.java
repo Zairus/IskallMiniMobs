@@ -35,7 +35,7 @@ public class GuiMMNamingStation
 	private boolean underline = false;
 	private boolean italic = false;
 	private boolean reset = false;
-	
+	private boolean textFieldActive = false;
 	private char[] colors = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
 	
 	private GuiMMManual manual;
@@ -212,6 +212,7 @@ public class GuiMMNamingStation
 				{
 					((GuiButton)this.buttonList.get(i)).yPosition -= 800;
 				}
+				this.nameField.yPosition -= 800;
 				break;
 			case 2:
 				manual.pagePrev();
@@ -272,6 +273,7 @@ public class GuiMMNamingStation
 				{
 					((GuiButton)this.buttonList.get(i)).yPosition += 800;
 				}
+				this.nameField.yPosition += 800;
 				break;
 			}
 			this.updateButtons();
@@ -328,12 +330,15 @@ public class GuiMMNamingStation
 	}
 	
 	@Override
-	protected void keyTyped(char keyChar, int i)
+	protected void keyTyped(char keyChar, int keyCode)
 	{
-		super.keyTyped(keyChar, i);
-		
-		if (nameField.textboxKeyTyped(keyChar, i))
+		if (keyCode == 1 || (!this.textFieldActive && keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()))
 		{
+			Keyboard.enableRepeatEvents(false);
+			this.mc.theWorld.playSoundAtEntity(this.mc.thePlayer, "iskallminimobs:namestation_close", 1.0F, 1.2F / (this.mc.theWorld.rand.nextFloat() * 0.2F + 0.9F));
+			this.mc.thePlayer.closeScreen();
+		} else if (this.textFieldActive) {
+			nameField.textboxKeyTyped(keyChar, keyCode);
 			String name = nameField.getText();
 			this.updateNameToServer(name);
 		}
@@ -344,14 +349,13 @@ public class GuiMMNamingStation
 	{
 		super.mouseClicked(i, j, k);
 		
-		if (
-				i > this.nameField.xPosition 
+		this.textFieldActive = i > this.nameField.xPosition 
 				&& i < this.nameField.xPosition + this.nameField.width 
 				&& j > this.nameField.yPosition
-				&& j < this.nameField.yPosition + this.nameField.height)
-		{
+				&& j < this.nameField.yPosition + this.nameField.height;
+		
+		if (this.textFieldActive)
 			nameField.mouseClicked(i, j, k);
-		}
 	}
 	
 	@Override
