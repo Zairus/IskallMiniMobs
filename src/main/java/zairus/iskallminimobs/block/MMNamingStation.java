@@ -14,7 +14,7 @@ public class MMNamingStation
 	{
 		super();
 		
-		this.setRenderId(1);
+		this.setRenderId(0);
 		this.guiId = 3;
 		
 		this.setBlockName(unlocalizedName);
@@ -29,7 +29,7 @@ public class MMNamingStation
 	
 	public int getTextureIndex()
 	{
-		return 1;
+		return 0;
 	}
 	
 	@Override

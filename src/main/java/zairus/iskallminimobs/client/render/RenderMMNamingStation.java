@@ -2,6 +2,7 @@ package zairus.iskallminimobs.client.render;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -9,8 +10,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import zairus.iskallminimobs.MMConstants;
+import zairus.iskallminimobs.block.MMBlocks;
+import zairus.iskallminimobs.block.MMNamingStation;
 import zairus.iskallminimobs.model.ModelMMNamingStation;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class RenderMMNamingStation
 	extends TileEntitySpecialRenderer
@@ -90,6 +92,6 @@ public class RenderMMNamingStation
 	@Override
 	public int getRenderId()
 	{
-		return 1;
+		return ((MMNamingStation)MMBlocks.mm_namingstation).getRenderType();
 	}
 }

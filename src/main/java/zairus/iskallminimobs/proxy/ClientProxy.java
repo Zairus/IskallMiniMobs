@@ -1,5 +1,9 @@
 package zairus.iskallminimobs.proxy;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.MinecraftForgeClient;
 import zairus.iskallminimobs.block.MMBlocks;
@@ -19,10 +23,6 @@ import zairus.iskallminimobs.entity.minimob.EntityMiniMobSpider;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobZombie;
 import zairus.iskallminimobs.entity.projectile.EntityMMPellet;
 import zairus.iskallminimobs.item.MMItems;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy
 	extends CommonProxy

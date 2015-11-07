@@ -75,9 +75,9 @@ public class ModelMMPowerProvider
 		Connector3.render(f5);
 		Connector4.render(f5);
 		
-		GL11.glEnable(GL11.GL_BLEND);
+		//GL11.glEnable(GL11.GL_BLEND);
 		Cap.render(f5);
-		GL11.glDisable(GL11.GL_BLEND);
+		//GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	public void renderModel(float f5)

@@ -1,5 +1,11 @@
 package zairus.iskallminimobs.block;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -11,12 +17,6 @@ import zairus.iskallminimobs.tileentity.TileEntityMMDNAExtractor;
 import zairus.iskallminimobs.tileentity.TileEntityMMIncubator;
 import zairus.iskallminimobs.tileentity.TileEntityMMNamingStation;
 import zairus.iskallminimobs.tileentity.TileEntityMMPowerProvider;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class MMBlocks
 {
