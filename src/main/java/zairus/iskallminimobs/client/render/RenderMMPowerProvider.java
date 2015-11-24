@@ -69,9 +69,7 @@ public class RenderMMPowerProvider
 		
 		this.bindTexture(textures);
 		
-		GL11.glPushMatrix();
 		this.model.renderModel(0.0625F);
-		GL11.glPopMatrix();
 		
 		GL11.glPopMatrix();
 	}

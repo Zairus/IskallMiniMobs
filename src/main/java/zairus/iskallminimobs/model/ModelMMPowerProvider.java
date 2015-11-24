@@ -75,9 +75,7 @@ public class ModelMMPowerProvider
 		Connector3.render(f5);
 		Connector4.render(f5);
 		
-		//GL11.glEnable(GL11.GL_BLEND);
 		Cap.render(f5);
-		//GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	public void renderModel(float f5)
@@ -88,8 +86,10 @@ public class ModelMMPowerProvider
 		Connector3.render(f5);
 		Connector4.render(f5);
 		
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glEnable(GL11.GL_BLEND);
 		Cap.render(f5);
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	private void setRotation(ModelRenderer model, float x, float y, float z)
