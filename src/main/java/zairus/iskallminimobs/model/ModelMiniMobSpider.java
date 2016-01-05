@@ -9,27 +9,16 @@ import net.minecraft.util.MathHelper;
 
 public class ModelMiniMobSpider extends ModelBase
 {
-	/** The spider's head box */
 	public ModelRenderer spiderHead;
-	/** The spider's neck box */
 	public ModelRenderer spiderNeck;
-	/** The spider's body box */
 	public ModelRenderer spiderBody;
-	/** Spider's first leg */
 	public ModelRenderer spiderLeg1;
-	/** Spider's second leg */
 	public ModelRenderer spiderLeg2;
-	/** Spider's third leg */
 	public ModelRenderer spiderLeg3;
-	/** Spider's fourth leg */
 	public ModelRenderer spiderLeg4;
-	/** Spider's fifth leg */
 	public ModelRenderer spiderLeg5;
-	/** Spider's sixth leg */
 	public ModelRenderer spiderLeg6;
-	/** Spider's seventh leg */
 	public ModelRenderer spiderLeg7;
-	/** Spider's eight leg */
 	public ModelRenderer spiderLeg8;
 	
 	public ModelMiniMobSpider()

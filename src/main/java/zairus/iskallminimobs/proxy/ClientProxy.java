@@ -5,6 +5,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraftforge.client.MinecraftForgeClient;
 import zairus.iskallminimobs.block.MMBlocks;
 import zairus.iskallminimobs.client.render.entity.RenderMMPellet;
@@ -43,16 +46,26 @@ public class ClientProxy
 	{
 		super.init(e);
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobPig.class, new RenderMiniMobPig());
-		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobZombie.class, new RenderMiniMobZombie());
-		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSkeleton.class, new RenderMiniMobSkeleton());
-		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobCreeper.class, new RenderMiniMobCreeper());
-		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSpider.class, new RenderMiniMobSpider());
-		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSoldier.class, new RenderMiniMobSoldier());
-		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobPenguin.class, new RenderMiniMobPenguin());
+		addMiniMobRenderer(EntityMiniMobPig.class, new RenderMiniMobPig());
+		addMiniMobRenderer(EntityMiniMobZombie.class, new RenderMiniMobZombie());
+		addMiniMobRenderer(EntityMiniMobSkeleton.class, new RenderMiniMobSkeleton());
+		addMiniMobRenderer(EntityMiniMobCreeper.class, new RenderMiniMobCreeper());
+		addMiniMobRenderer(EntityMiniMobSpider.class, new RenderMiniMobSpider());
+		addMiniMobRenderer(EntityMiniMobSoldier.class, new RenderMiniMobSoldier());
+		addMiniMobRenderer(EntityMiniMobPenguin.class, new RenderMiniMobPenguin());
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityMMPellet.class, new RenderMMPellet());
 		
 		MinecraftForgeClient.registerItemRenderer(MMItems.mm_pellet, new RenderItemMMPellet());
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void addMiniMobRenderer(Class<? extends Entity> clazz, Render renderer)
+	{
+		RenderingRegistry.registerEntityRenderingHandler(clazz, renderer);
+		
+		if (!RenderManager.instance.entityRenderMap.containsKey(clazz))
+			RenderManager.instance.entityRenderMap.put(clazz, renderer);
 	}
 	
 	@Override

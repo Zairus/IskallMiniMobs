@@ -2,6 +2,12 @@ package zairus.iskallminimobs.gui;
 
 import java.awt.Color;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -13,16 +19,9 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import zairus.iskallminimobs.MMConstants;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobBase;
 import zairus.iskallminimobs.inventory.ContainerMiniMob;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiMMInventory
@@ -206,37 +205,42 @@ public class GuiMMInventory
 		renderMini(left + 51, top + 75, 30, (float)(left + 51) - this.x1, (float)(top + 75 - 50) - this.y1, this.miniMob);
     }
 	
-	public static void renderMini(int p_147046_0_, int p_147046_1_, int p_147046_2_, float p_147046_3_, float p_147046_4_, EntityLivingBase p_147046_5_)
+	public static void renderMini(int p_147046_0_, int p_147046_1_, int p_147046_2_, float p_147046_3_, float p_147046_4_, EntityLivingBase entity)
 	{
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)p_147046_0_, (float)p_147046_1_, 50.0F);
 		GL11.glScalef((float)(-p_147046_2_), (float)p_147046_2_, (float)p_147046_2_);
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-		float var6 = p_147046_5_.renderYawOffset;
-		float var7 = p_147046_5_.rotationYaw;
-		float var8 = p_147046_5_.rotationPitch;
-		float var9 = p_147046_5_.prevRotationYawHead;
-		float var10 = p_147046_5_.rotationYawHead;
+		float var6 = entity.renderYawOffset;
+		float var7 = entity.rotationYaw;
+		float var8 = entity.rotationPitch;
+		float var9 = entity.prevRotationYawHead;
+		float var10 = entity.rotationYawHead;
 		GL11.glRotatef(135.0F, 0.0F, 1.0F, 0.0F);
 		RenderHelper.enableStandardItemLighting();
 		GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-((float)Math.atan((double)(p_147046_4_ / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
-		p_147046_5_.renderYawOffset = (float)Math.atan((double)(p_147046_3_ / 40.0F)) * 20.0F;
-		p_147046_5_.rotationYaw = (float)Math.atan((double)(p_147046_3_ / 40.0F)) * 40.0F;
-		p_147046_5_.rotationPitch = -((float)Math.atan((double)(p_147046_4_ / 40.0F))) * 20.0F;
-		p_147046_5_.rotationYawHead = p_147046_5_.rotationYaw;
-		p_147046_5_.prevRotationYawHead = p_147046_5_.rotationYaw;
-		GL11.glTranslatef(0.0F, p_147046_5_.yOffset, 0.0F);
-		//GL11.glScalef(1.5F, 1.5F, 1.5F);
+		entity.renderYawOffset = (float)Math.atan((double)(p_147046_3_ / 40.0F)) * 20.0F;
+		entity.rotationYaw = (float)Math.atan((double)(p_147046_3_ / 40.0F)) * 40.0F;
+		entity.rotationPitch = -((float)Math.atan((double)(p_147046_4_ / 40.0F))) * 20.0F;
+		entity.rotationYawHead = entity.rotationYaw;
+		entity.prevRotationYawHead = entity.rotationYaw;
+		GL11.glTranslatef(0.0F, entity.yOffset, 0.0F);
+		
+		GL11.glScalef(1.5F, 1.5F, 1.5F);
+		
 		RenderManager.instance.playerViewY = 180.0F;
-		RenderManager.instance.func_147939_a(p_147046_5_, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-		//GL11.glScalef(-.5F, -1.5F, -1.5F);
-		p_147046_5_.renderYawOffset = var6;
-		p_147046_5_.rotationYaw = var7;
-		p_147046_5_.rotationPitch = var8;
-		p_147046_5_.prevRotationYawHead = var9;
-		p_147046_5_.rotationYawHead = var10;
+		RenderManager.instance.func_147939_a(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, true);
+		RenderManager.instance.getEntityRenderObject(entity).doRender(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+		
+		GL11.glScalef(-.5F, -1.5F, -1.5F);
+		
+		entity.renderYawOffset = var6;
+		entity.rotationYaw = var7;
+		entity.rotationPitch = var8;
+		entity.prevRotationYawHead = var9;
+		entity.rotationYawHead = var10;
 		GL11.glPopMatrix();
 		RenderHelper.disableStandardItemLighting();
 		GL11.glDisable(GL12.GL_RESCALE_NORMAL);

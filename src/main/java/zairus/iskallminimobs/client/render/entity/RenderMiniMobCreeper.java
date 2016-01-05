@@ -27,6 +27,11 @@ public class RenderMiniMobCreeper
 		creeperModel = this.mainModel;
 	}
 	
+	public void doRender(Entity entity, double d1, double d2, double d3, float f1, float f2)
+	{
+		super.doRender(entity, d1, d2, d3, f1, f2);
+	}
+	
 	protected void preRenderCallback(EntityMiniMobCreeper entity, float frame)
 	{
 		float f1 = entity.getCreeperFlashIntensity(frame);
