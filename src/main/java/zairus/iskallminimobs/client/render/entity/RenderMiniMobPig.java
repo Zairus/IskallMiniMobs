@@ -20,7 +20,7 @@ public class RenderMiniMobPig
 		super(new ModelMiniMobPig(0.3F), 0.3F);
 	}
 	
-	protected int shouldRenderPass(EntityMiniMobPig miniMobPog, int p_77032_2_, float p_77032_3_)
+	protected int shouldRenderPass(EntityMiniMobPig miniMobPig, int type, float frame)
 	{
 		return -1;
 	}
@@ -30,11 +30,13 @@ public class RenderMiniMobPig
 		return pigTextures;
 	}
 	
-	protected int shouldRenderPass(EntityLivingBase entity, int p_77032_2_, float p_77032_3_)
+	@Override
+	protected int shouldRenderPass(EntityLivingBase entity, int type, float frame)
 	{
-		return this.shouldRenderPass((EntityMiniMobPig)entity, p_77032_2_, p_77032_3_);
+		return this.shouldRenderPass((EntityMiniMobPig)entity, type, frame);
 	}
 	
+	@Override
 	protected ResourceLocation getEntityTexture(Entity entity)
 	{
 		return this.getEntityTexture((EntityMiniMobPig)entity);

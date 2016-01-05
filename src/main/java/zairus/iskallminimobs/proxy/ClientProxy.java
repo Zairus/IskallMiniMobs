@@ -9,6 +9,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import zairus.iskallminimobs.block.MMBlocks;
 import zairus.iskallminimobs.client.render.entity.RenderMMPellet;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobCreeper;
+import zairus.iskallminimobs.client.render.entity.RenderMiniMobPenguin;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobPig;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobSkeleton;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobSoldier;
@@ -16,6 +17,7 @@ import zairus.iskallminimobs.client.render.entity.RenderMiniMobSpider;
 import zairus.iskallminimobs.client.render.entity.RenderMiniMobZombie;
 import zairus.iskallminimobs.client.render.item.RenderItemMMPellet;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobCreeper;
+import zairus.iskallminimobs.entity.minimob.EntityMiniMobPenguin;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobPig;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSkeleton;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSoldier;
@@ -47,7 +49,7 @@ public class ClientProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobCreeper.class, new RenderMiniMobCreeper());
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSpider.class, new RenderMiniMobSpider());
 		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobSoldier.class, new RenderMiniMobSoldier());
-		
+		RenderingRegistry.registerEntityRenderingHandler(EntityMiniMobPenguin.class, new RenderMiniMobPenguin());
 		RenderingRegistry.registerEntityRenderingHandler(EntityMMPellet.class, new RenderMMPellet());
 		
 		MinecraftForgeClient.registerItemRenderer(MMItems.mm_pellet, new RenderItemMMPellet());

@@ -160,4 +160,10 @@ public class TileEntityMMDNAExtractor
 		
 		return value;
 	}
+	
+	@Override
+	public boolean canConnectEnergy(ForgeDirection from)
+	{
+		return true;
+	}
 }

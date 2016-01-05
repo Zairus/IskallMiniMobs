@@ -5,6 +5,26 @@
 			{"name": "pellet_crack","stream": false}
 		]
 	}
+	,"penguin_idle": {
+		"category": "master"
+		,"sounds": [
+			{"name": "penguin_idle1", "stream": false}
+			,{"name": "penguin_idle2", "stream": false}
+			,{"name": "penguin_idle3", "stream": false}
+		]
+	}
+	,"penguin_death": {
+		"category": "master"
+		,"sounds": [
+			{"name": "penguin_death1", "stream": false}
+		]
+	}
+	,"penguin_noot": {
+		"category": "master"
+		,"sounds": [
+			{"name": "penguin_noot", "stream": false}
+		]
+	}
 	,"namestation_open": {
 		"category": "master"
 		,"sounds": [

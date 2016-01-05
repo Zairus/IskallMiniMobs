@@ -19,16 +19,17 @@ public class RenderMiniMobCreeper
 	extends RenderLiving
 {
 	private static final ResourceLocation creeperTextures = new ResourceLocation("textures/entity/creeper/creeper.png");
-	private ModelBase creeperModel = new ModelMiniMobCreeper(0.5F);
+	private final ModelBase creeperModel;
 	
 	public RenderMiniMobCreeper()
 	{
-		super(new ModelMiniMobCreeper(), 0.25F);
+		super(new ModelMiniMobCreeper(0.5F), 0.25F);
+		creeperModel = this.mainModel;
 	}
 	
-	protected void preRenderCallback(EntityMiniMobCreeper p_77041_1_, float p_77041_2_)
+	protected void preRenderCallback(EntityMiniMobCreeper entity, float frame)
 	{
-		float f1 = p_77041_1_.getCreeperFlashIntensity(p_77041_2_);
+		float f1 = entity.getCreeperFlashIntensity(frame);
 		float f2 = 1.0F + MathHelper.sin(f1 * 100.0F) * f1 * 0.01F;
 		
 		if (f1 < 0.0F)
@@ -48,9 +49,9 @@ public class RenderMiniMobCreeper
 		GL11.glScalef(f3, f4, f3);
 	}
 	
-	protected int getColorMultiplier(EntityMiniMobCreeper p_77030_1_, float p_77030_2_, float p_77030_3_)
+	protected int getColorMultiplier(EntityMiniMobCreeper entity, float brightness, float frame)
 	{
-		float f2 = p_77030_1_.getCreeperFlashIntensity(p_77030_3_);
+		float f2 = entity.getCreeperFlashIntensity(frame);
 		
 		if ((int) (f2 * 10.0F) % 2 == 0)
 		{
@@ -76,11 +77,11 @@ public class RenderMiniMobCreeper
 		}
 	}
 	
-	protected int shouldRenderPass(EntityMiniMobCreeper p_77032_1_, int p_77032_2_, float p_77032_3_)
+	protected int shouldRenderPass(EntityMiniMobCreeper entity, int type, float frame)
 	{
-		if (p_77032_1_.getPowered())
+		if (entity.getPowered())
 		{
-			if (p_77032_1_.isInvisible())
+			if (entity.isInvisible())
 			{
 				GL11.glDepthMask(false);
 			} else
@@ -88,9 +89,9 @@ public class RenderMiniMobCreeper
 				GL11.glDepthMask(true);
 			}
 			
-			if (p_77032_2_ == 1)
+			if (type == 1)
 			{
-				float f1 = (float) p_77032_1_.ticksExisted + p_77032_3_;
+				float f1 = (float) entity.ticksExisted + frame;
 				this.bindTexture(creeperTextures);
 				GL11.glMatrixMode(GL11.GL_TEXTURE);
 				GL11.glLoadIdentity();
@@ -107,7 +108,7 @@ public class RenderMiniMobCreeper
 				return 1;
 			}
 			
-			if (p_77032_2_ == 2)
+			if (type == 2)
 			{
 				GL11.glMatrixMode(GL11.GL_TEXTURE);
 				GL11.glLoadIdentity();
@@ -120,38 +121,43 @@ public class RenderMiniMobCreeper
 		return -1;
 	}
 	
-	protected int inheritRenderPass(EntityMiniMobCreeper p_77035_1_, int p_77035_2_, float p_77035_3_)
+	protected int inheritRenderPass(EntityMiniMobCreeper entity, int i1, float f1)
 	{
 		return -1;
 	}
 	
-	protected ResourceLocation getEntityTexture(EntityMiniMobCreeper p_110775_1_)
+	protected ResourceLocation getEntityTexture(EntityMiniMobCreeper entity)
 	{
 		return creeperTextures;
 	}
 	
-	protected void preRenderCallback(EntityLivingBase p_77041_1_, float p_77041_2_)
+	@Override
+	protected void preRenderCallback(EntityLivingBase entity, float f1)
 	{
-		this.preRenderCallback((EntityMiniMobCreeper) p_77041_1_, p_77041_2_);
+		this.preRenderCallback((EntityMiniMobCreeper) entity, f1);
 	}
 	
-	protected int getColorMultiplier(EntityLivingBase p_77030_1_, float p_77030_2_, float p_77030_3_)
+	@Override
+	protected int getColorMultiplier(EntityLivingBase entity, float f1, float f2)
 	{
-		return this.getColorMultiplier((EntityMiniMobCreeper) p_77030_1_, p_77030_2_, p_77030_3_);
+		return this.getColorMultiplier((EntityMiniMobCreeper) entity, f1, f2);
 	}
 	
-	protected int shouldRenderPass(EntityLivingBase p_77032_1_, int p_77032_2_, float p_77032_3_)
+	@Override
+	protected int shouldRenderPass(EntityLivingBase entity, int i1, float f1)
 	{
-		return this.shouldRenderPass((EntityMiniMobCreeper) p_77032_1_, p_77032_2_, p_77032_3_);
+		return this.shouldRenderPass((EntityMiniMobCreeper) entity, i1, f1);
 	}
 	
-	protected int inheritRenderPass(EntityLivingBase p_77035_1_, int p_77035_2_, float p_77035_3_)
+	@Override
+	protected int inheritRenderPass(EntityLivingBase entity, int i1, float f1)
 	{
-		return this.inheritRenderPass((EntityMiniMobCreeper) p_77035_1_, p_77035_2_, p_77035_3_);
+		return this.inheritRenderPass((EntityMiniMobCreeper) entity, i1, f1);
 	}
 	
-	protected ResourceLocation getEntityTexture(Entity p_110775_1_)
+	@Override
+	protected ResourceLocation getEntityTexture(Entity entity)
 	{
-		return this.getEntityTexture((EntityMiniMobCreeper) p_110775_1_);
+		return this.getEntityTexture((EntityMiniMobCreeper) entity);
 	}
 }

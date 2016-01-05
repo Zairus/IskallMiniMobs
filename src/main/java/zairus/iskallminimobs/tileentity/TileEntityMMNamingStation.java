@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.ForgeDirection;
 import zairus.iskallminimobs.MMConstants;
 
 public class TileEntityMMNamingStation
@@ -260,5 +261,35 @@ public class TileEntityMMNamingStation
 	public void playCloseSound()
 	{
 		this.worldObj.playSound(this.xCoord, this.yCoord, this.zCoord, "iskallminimobs:namestation_close", 1.0F, 1.2F / (this.worldObj.rand.nextFloat() * 0.2F + 0.9F), true);
+	}
+	
+	@Override
+	public boolean canConnectEnergy(ForgeDirection from)
+	{
+		return false;
+	}
+	
+	@Override
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate)
+	{
+		return 0;
+	}
+	
+	@Override
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
+	{
+		return 0;
+	}
+	
+	@Override
+	public int getEnergyStored(ForgeDirection from)
+	{
+		return 0;
+	}
+	
+	@Override
+	public int getMaxEnergyStored(ForgeDirection from)
+	{
+		return 0;
 	}
 }

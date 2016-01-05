@@ -18,7 +18,7 @@ import net.minecraft.util.MathHelper;
 public class MMCorpse
 	extends MMItemBase
 {
-	public static final String[] types = new String[] {"pig", "zombie", "skeleton", "creeper", "spider", "soldier"};
+	public static final String[] types = new String[] {"pig", "zombie", "skeleton", "creeper", "spider", "soldier", "penguin"};
 	
 	private IIcon[] icons;
 	
@@ -74,7 +74,7 @@ public class MMCorpse
     {
 		NBTTagCompound tag = stack.getTagCompound();
 		
-		String[] mobDescriptions = {"Pig Mini Mob", "Zombie Mini Mob", "Skeleton Mini Mob", "Creeper Mini Mob", "Spider Mini Mob", "Soldier Mini Mob"};
+		String[] mobDescriptions = {"Pig Mini Mob", "Zombie Mini Mob", "Skeleton Mini Mob", "Creeper Mini Mob", "Spider Mini Mob", "Soldier Mini Mob", "Penguin Mini Mob"};
 		
 		if (tag != null)
 		{

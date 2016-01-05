@@ -115,4 +115,10 @@ public class TileEntityMMIncubator
 		
 		return data;
 	}
+	
+	@Override
+	public boolean canConnectEnergy(ForgeDirection from)
+	{
+		return true;
+	}
 }

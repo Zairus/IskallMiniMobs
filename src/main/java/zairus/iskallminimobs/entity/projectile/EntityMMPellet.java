@@ -8,6 +8,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobBase;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobCreeper;
+import zairus.iskallminimobs.entity.minimob.EntityMiniMobPenguin;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobPig;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSkeleton;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSoldier;
@@ -86,6 +87,9 @@ public class EntityMMPellet
 				break;
 			case 5:
 				miniMob = new EntityMiniMobSoldier(worldObj);
+				break;
+			case 6:
+				miniMob = new EntityMiniMobPenguin(worldObj);
 				break;
 			default:
 				miniMob = new EntityMiniMobPig(worldObj);

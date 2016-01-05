@@ -342,7 +342,7 @@ public abstract class EntityMiniMobBase
 			
 			gainExperience(1.0D);
 		}
-
+		
 		return flag;
 	}
 	
@@ -726,6 +726,9 @@ public abstract class EntityMiniMobBase
 		{
 			tag.setString(MiniMobData.CUSTOMNAME_KEY, this.getCustomNameTag());
 		}
+		
+		if (this.miniMobUUID == null || this.miniMobUUID == "")
+			this.miniMobUUID = UUID.randomUUID().toString();
 		
 		tag.setString(MiniMobData.UUID_KEY, this.miniMobUUID);
 		tag.setDouble(MiniMobData.SPEED_KEY, this.speedCurrent);

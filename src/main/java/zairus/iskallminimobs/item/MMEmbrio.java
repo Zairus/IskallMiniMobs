@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class MMEmbrio
 	extends MMItemBase
 {
-	public static final String[] embrio_types = new String[] {"pig", "zombie", "skeleton", "creeper", "spider", "soldier"};
+	public static final String[] embrio_types = new String[] {"pig", "zombie", "skeleton", "creeper", "spider", "soldier", "penguin"};
 	
 	private IIcon[] embrioIcons;
 	

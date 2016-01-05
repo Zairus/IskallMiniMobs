@@ -4,6 +4,7 @@ import zairus.iskallminimobs.IskallMiniMobs;
 import zairus.iskallminimobs.block.MMBlocks;
 import zairus.iskallminimobs.entity.MMEntityRegistry;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobCreeper;
+import zairus.iskallminimobs.entity.minimob.EntityMiniMobPenguin;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobPig;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSkeleton;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobSoldier;
@@ -34,6 +35,7 @@ public class CommonProxy
 		MMEntityRegistry.registerEntity(EntityMiniMobCreeper.class, "entity_minimob_creeper", IskallMiniMobs.instance, 64, 1, true, 0x4fc500, 0x7e8b75); 
 		MMEntityRegistry.registerEntity(EntityMiniMobSpider.class, "entity_minimob_spider", IskallMiniMobs.instance, 64, 1, true, 0x21271d, 0xb70000);
 		MMEntityRegistry.registerEntity(EntityMiniMobSoldier.class, "entity_minimob_soldier", IskallMiniMobs.instance, 64, 1, true, 0x6b6b6b, 0xd5f8ab);
+		MMEntityRegistry.registerEntity(EntityMiniMobPenguin.class, "entity_minimob_penguin", IskallMiniMobs.instance, 64, 1, true, 0x000000, 0xffffff);
 		
 		MMEntityRegistry.registerEntity(EntityMMPellet.class, "entity_mm_pellet", IskallMiniMobs.instance, 64, 1, true);
 	}

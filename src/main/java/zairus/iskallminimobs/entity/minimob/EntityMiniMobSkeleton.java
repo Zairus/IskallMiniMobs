@@ -254,36 +254,36 @@ public class EntityMiniMobSkeleton
 		return this.dataWatcher.getWatchableObjectByte(13);
 	}
 	
-	public void setSkeletonType(int p_82201_1_)
+	public void setSkeletonType(int type)
 	{
-		this.dataWatcher.updateObject(13, Byte.valueOf((byte) p_82201_1_));
-		this.isImmuneToFire = p_82201_1_ == 1;
+		this.dataWatcher.updateObject(13, Byte.valueOf((byte) type));
+		this.isImmuneToFire = type == 1;
 		
-		if (p_82201_1_ == 1) {
+		if (type == 1) {
 			this.setSize(0.72F, 2.34F);
 		} else {
 			this.setSize(0.6F, 1.8F);
 		}
 	}
 	
-	public void readEntityFromNBT(NBTTagCompound p_70037_1_)
+	public void readEntityFromNBT(NBTTagCompound tag)
 	{
-		super.readEntityFromNBT(p_70037_1_);
+		super.readEntityFromNBT(tag);
 		
-		if (p_70037_1_.hasKey("SkeletonType", 99))
+		if (tag.hasKey("SkeletonType", 99))
 		{
-			byte b0 = p_70037_1_.getByte("SkeletonType");
+			byte b0 = tag.getByte("SkeletonType");
 			this.setSkeletonType(b0);
 		}
 		
 		this.setCombatTask();
 	}
 	
-	public void writeEntityToNBT(NBTTagCompound p_70014_1_)
+	public void writeEntityToNBT(NBTTagCompound tag)
 	{
-		super.writeEntityToNBT(p_70014_1_);
+		super.writeEntityToNBT(tag);
 		
-		p_70014_1_.setByte("SkeletonType", (byte) this.getSkeletonType());
+		tag.setByte("SkeletonType", (byte) this.getSkeletonType());
 	}
 	
 	@Override

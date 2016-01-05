@@ -38,7 +38,14 @@ public class MMPellet
     {
 		NBTTagCompound tag = stack.getTagCompound();
 		
-		String[] mobDescriptions = {"Pig Mini Mob", "Zombie Mini Mob", "Skeleton Mini Mob", "Creeper Mini Mob", "Spider Mini Mob"};
+		String[] mobDescriptions = {
+				"Pig Mini Mob"
+				, "Zombie Mini Mob"
+				, "Skeleton Mini Mob"
+				, "Creeper Mini Mob"
+				, "Spider Mini Mob"
+				, "Soldier Mini Mob"
+				, "Penguin Mini Mob"};
 		
 		if (tag != null)
 		{
@@ -165,7 +172,7 @@ public class MMPellet
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister)
 	{
-		this.mobIconOverlay = new IIcon[6];
+		this.mobIconOverlay = new IIcon[7];
 		
 		this.mobIconOverlay[0] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_pig");
 		this.mobIconOverlay[1] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_zombie");
@@ -173,6 +180,7 @@ public class MMPellet
 		this.mobIconOverlay[3] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_creeper");
 		this.mobIconOverlay[4] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_spider");
 		this.mobIconOverlay[5] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_soldier");
+		this.mobIconOverlay[6] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_penguin");
 		
 		this.emptyOverlay = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_empty");
 		this.baseIcon = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet");

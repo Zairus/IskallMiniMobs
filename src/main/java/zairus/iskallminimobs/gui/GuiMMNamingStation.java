@@ -155,7 +155,6 @@ public class GuiMMNamingStation
 	@Override
 	public void onGuiClosed()
 	{
-		this.mc.theWorld.playSoundAtEntity(this.mc.thePlayer, "iskallminimobs:namestation_close", 1.0F, 1.2F / (this.mc.theWorld.rand.nextFloat() * 0.2F + 0.9F));
 		Keyboard.enableRepeatEvents(false);
 	}
 	
