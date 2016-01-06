@@ -77,7 +77,17 @@ public class EntityMiniMobPenguin
 	
 	protected String getLivingSound()
 	{
-		return "iskallminimobs:penguin_idle";
+		String sound = "iskallminimobs:penguin_idle";
+		
+		if (this.hasCustomNameTag())
+		{
+			if (this.getCustomNameTag().contains("Pingu"))
+			{
+				sound = "iskallminimobs:penguin_noot";
+			}
+		}
+		
+		return sound;
 	}
 	
 	protected String getHurtSound()

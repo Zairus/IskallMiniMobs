@@ -113,6 +113,10 @@ public class TileEntityMMDNAExtractor
 				if (this.contents[i] != null && (this.contents[i].getItem() == Items.rotten_flesh || this.contents[i].getItem() == Items.bone || this.contents[i].getItem() == Items.apple))
 					value = 0.05F;
 				break;
+			case 6:
+				if (this.contents[i] != null && this.contents[i].getItem() == Items.feather)
+					value = 0.05F;
+				break;
 			default:
 				if (this.contents[i] != null && this.contents[i].getItem() == Items.porkchop)
 					value = 0.05F;
