@@ -1,28 +1,31 @@
 package zairus.iskallminimobs.item;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import zairus.iskallminimobs.MMConstants;
-import zairus.iskallminimobs.entity.minimob.MiniMobData;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import zairus.iskallminimobs.MMConstants;
+import zairus.iskallminimobs.entity.minimob.MiniMobData;
 
-public class MMEmbrio
+public class MMEmbryo
 	extends MMItemBase
 {
-	public static final String[] embrio_types = new String[] {"pig", "zombie", "skeleton", "creeper", "spider", "soldier", "penguin"};
+	public static final String[] embrio_types = EmbryoTypes.nameArray();
 	
 	private IIcon[] embrioIcons;
 	
-	public MMEmbrio()
+	public MMEmbryo()
 	{
 		super();
 		
@@ -93,4 +96,66 @@ public class MMEmbrio
 			}
 		}
     }
+	
+	public static enum EmbryoTypes
+	{
+		PIG(),
+		ZOMBIE(),
+		SKELETON(),
+		CREEPER(),
+		SPIDER(),
+		SOLDIER(),
+		PENGUIN();
+		
+		private EmbryoTypes()
+		{
+			;
+		}
+		
+		public String toString()
+		{
+			return EmbryoTypes.nameArray()[ordinal()];
+		}
+		
+		public static String[] nameArray()
+		{
+			String[] names = { "pig", "zombie", "skeleton", "creeper", "spider", "soldier", "penguin" };
+			
+			return names;
+		}
+		
+		public static String[] descriptionArray()
+		{
+			String[] mobDescriptions = {"Pig Mini Mob", "Zombie Mini Mob", "Skeleton Mini Mob", "Creeper Mini Mob", "Spider Mini Mob", "Soldier Mini Mob", "Penguin Mini Mob"};
+			
+			return mobDescriptions;
+		}
+		
+		public static HashMap<Integer, List<Item>> getEssenceItems()
+		{
+			HashMap<Integer, List<Item>> essenceItems = new HashMap<Integer, List<Item>>();
+			
+			essenceItems.put(0, EmbryoTypes.getItemList(Items.porkchop));
+			essenceItems.put(1, EmbryoTypes.getItemList(Items.rotten_flesh));
+			essenceItems.put(2, EmbryoTypes.getItemList(Items.bone));
+			essenceItems.put(3, EmbryoTypes.getItemList(Items.gunpowder));
+			essenceItems.put(4, EmbryoTypes.getItemList(Items.string, Items.spider_eye));
+			essenceItems.put(5, EmbryoTypes.getItemList(Items.bone, Items.rotten_flesh, Items.apple));
+			essenceItems.put(6, EmbryoTypes.getItemList(Items.feather));
+			
+			return essenceItems;
+		}
+		
+		public static List<Item> getItemList(Item... items)
+		{
+			List<Item> iList = new ArrayList<Item>();
+			
+			for (int i = 0; i < items.length; ++i)
+			{
+				iList.add(items[i]);
+			}
+			
+			return iList;
+		}
+	}
 }

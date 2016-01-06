@@ -4,8 +4,6 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import zairus.iskallminimobs.MMConstants;
-import zairus.iskallminimobs.entity.minimob.MiniMobData;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,11 +12,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import zairus.iskallminimobs.MMConstants;
+import zairus.iskallminimobs.entity.minimob.MiniMobData;
+import zairus.iskallminimobs.item.MMEmbryo.EmbryoTypes;
 
 public class MMCorpse
 	extends MMItemBase
 {
-	public static final String[] types = new String[] {"pig", "zombie", "skeleton", "creeper", "spider", "soldier", "penguin"};
+	public static final String[] types = EmbryoTypes.nameArray();
 	
 	private IIcon[] icons;
 	
@@ -74,8 +75,6 @@ public class MMCorpse
     {
 		NBTTagCompound tag = stack.getTagCompound();
 		
-		String[] mobDescriptions = {"Pig Mini Mob", "Zombie Mini Mob", "Skeleton Mini Mob", "Creeper Mini Mob", "Spider Mini Mob", "Soldier Mini Mob", "Penguin Mini Mob"};
-		
 		if (tag != null)
 		{
 			if (tag.hasKey(MiniMobData.MOBDATA_KEY))
@@ -91,7 +90,7 @@ public class MMCorpse
 				}
 				else
 				{
-					mobName = mobDescriptions[mobType];
+					mobName = EmbryoTypes.descriptionArray()[mobType];
 				}
 				
 				list.add(mobName + "'s corpse");

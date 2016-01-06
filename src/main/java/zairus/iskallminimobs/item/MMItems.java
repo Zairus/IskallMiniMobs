@@ -16,7 +16,7 @@ public class MMItems
 	
 	public static final void init()
 	{
-		mm_embrio = new MMEmbrio().setUnlocalizedName("mm_embrio");
+		mm_embrio = new MMEmbryo().setUnlocalizedName("mm_embrio");
 		mm_corpse = new MMCorpse().setUnlocalizedName("mm_corpse");
 		mm_pellet = new MMPellet().setUnlocalizedName("mm_pellet");
 		mm_termicunit = new MMTermicUnit().setUnlocalizedName("mm_termicunit");

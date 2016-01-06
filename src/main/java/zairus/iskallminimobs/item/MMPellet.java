@@ -14,6 +14,7 @@ import zairus.iskallminimobs.MMConstants;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobBase;
 import zairus.iskallminimobs.entity.minimob.MiniMobData;
 import zairus.iskallminimobs.entity.projectile.EntityMMPellet;
+import zairus.iskallminimobs.item.MMEmbryo.EmbryoTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -38,15 +39,6 @@ public class MMPellet
     {
 		NBTTagCompound tag = stack.getTagCompound();
 		
-		String[] mobDescriptions = {
-				"Pig Mini Mob"
-				, "Zombie Mini Mob"
-				, "Skeleton Mini Mob"
-				, "Creeper Mini Mob"
-				, "Spider Mini Mob"
-				, "Soldier Mini Mob"
-				, "Penguin Mini Mob"};
-		
 		if (tag != null)
 		{
 			if (tag.hasKey(MiniMobData.MOBDATA_KEY))
@@ -62,7 +54,7 @@ public class MMPellet
 				}
 				else
 				{
-					mobName = mobDescriptions[mobType];
+					mobName = EmbryoTypes.descriptionArray()[mobType];
 				}
 				
 				list.add("Contains: " + mobName);
@@ -172,15 +164,12 @@ public class MMPellet
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister)
 	{
-		this.mobIconOverlay = new IIcon[7];
+		int totalIcons = EmbryoTypes.nameArray().length;
 		
-		this.mobIconOverlay[0] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_pig");
-		this.mobIconOverlay[1] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_zombie");
-		this.mobIconOverlay[2] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_skeleton");
-		this.mobIconOverlay[3] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_creeper");
-		this.mobIconOverlay[4] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_spider");
-		this.mobIconOverlay[5] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_soldier");
-		this.mobIconOverlay[6] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_penguin");
+		this.mobIconOverlay = new IIcon[totalIcons];
+		
+		for (int i = 0; i < totalIcons; ++i)
+			this.mobIconOverlay[i] = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_" + EmbryoTypes.nameArray()[i]);
 		
 		this.emptyOverlay = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet_empty");
 		this.baseIcon = iconRegister.registerIcon(MMConstants.MODID + ":mm_pellet");

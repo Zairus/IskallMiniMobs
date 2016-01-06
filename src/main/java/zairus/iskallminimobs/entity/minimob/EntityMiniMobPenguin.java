@@ -114,7 +114,7 @@ public class EntityMiniMobPenguin
 			{
 				if (this.rand.nextInt(10) > 7)
 				{
-					((EntityLivingBase) entity).addPotionEffect(new PotionEffect(2, 6, 1, false));
+					((EntityLivingBase) entity).addPotionEffect(new PotionEffect(2, 200, 1, false));
 				}
 			}
 			return true;

@@ -651,12 +651,37 @@ public abstract class EntityMiniMobBase
 	
 	protected NBTTagList getItemList()
 	{
-		return new NBTTagList();
+		NBTTagList nbttaglist = new NBTTagList();
+		
+		for (int i = 0; i < 5; ++i)
+		{
+			NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+			nbttagcompound1.setByte("Slot", (byte)i);
+			
+			if (this.getEquipmentInSlot(i) != null)
+				this.getEquipmentInSlot(i).writeToNBT(nbttagcompound1);
+			
+			nbttaglist.appendTag(nbttagcompound1);
+		}
+		
+		return nbttaglist;
 	}
 	
 	protected void setItemList(NBTTagList nbttaglist)
 	{
-		;
+		for (int i = 0; i < nbttaglist.tagCount(); ++i)
+		{
+			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+			if (nbttagcompound1 != null)
+			{
+				int j = nbttagcompound1.getByte("Slot") & 255;
+				
+				if (j >= 0 && j < 5)
+				{
+					this.setCurrentItemOrArmor(j, ItemStack.loadItemStackFromNBT(nbttagcompound1));
+				}
+			}
+		}
 	}
 	
 	protected NBTTagList getInventoryToNBT()

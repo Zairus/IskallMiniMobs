@@ -2,6 +2,9 @@ package zairus.iskallminimobs.entity.minimob;
 
 import java.util.UUID;
 
+import com.google.common.base.Charsets;
+import com.mojang.authlib.GameProfile;
+
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -19,9 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
-
-import com.google.common.base.Charsets;
-import com.mojang.authlib.GameProfile;
 
 public class EntityMiniMobSoldier
 	extends EntityMiniMobBase

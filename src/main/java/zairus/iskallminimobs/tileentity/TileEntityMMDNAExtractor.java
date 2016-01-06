@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import zairus.iskallminimobs.entity.minimob.MiniMobData;
+import zairus.iskallminimobs.item.MMEmbryo.EmbryoTypes;
 
 public class TileEntityMMDNAExtractor
 	extends TileEntityMMBase
@@ -91,37 +92,8 @@ public class TileEntityMMDNAExtractor
 		
 		for (int i = 0; i < 4; ++i)
 		{
-			switch (mobType)
-			{
-			case 1:
-				if (this.contents[i] != null && this.contents[i].getItem() == Items.rotten_flesh)
-					value = 0.05F;
-				break;
-			case 2:
-				if (this.contents[i] != null && this.contents[i].getItem() == Items.bone)
-					value = 0.05F;
-				break;
-			case 3:
-				if (this.contents[i] != null && this.contents[i].getItem() == Items.gunpowder)
-					value = 0.05F;
-				break;
-			case 4:
-				if (this.contents[i] != null && (this.contents[i].getItem() == Items.string || this.contents[i].getItem() == Items.spider_eye))
-					value = 0.05F;
-				break;
-			case 5:
-				if (this.contents[i] != null && (this.contents[i].getItem() == Items.rotten_flesh || this.contents[i].getItem() == Items.bone || this.contents[i].getItem() == Items.apple))
-					value = 0.05F;
-				break;
-			case 6:
-				if (this.contents[i] != null && this.contents[i].getItem() == Items.feather)
-					value = 0.05F;
-				break;
-			default:
-				if (this.contents[i] != null && this.contents[i].getItem() == Items.porkchop)
-					value = 0.05F;
-				break;
-			}
+			if (this.contents[i] != null && EmbryoTypes.getEssenceItems().get(mobType).contains(this.contents[i].getItem()))
+				value = 0.05F;
 			
 			if (value > 0.0F)
 			{
