@@ -68,6 +68,9 @@ public abstract class EntityMiniMobBase
 	
 	protected boolean canEquipArmor = false;
 	protected boolean canWeildWeapon = false;
+	protected boolean undeadHealing = false;
+	protected float undeadHealingTicks = 0.0F;
+	protected float smiteModifier = 1.0F;
 	
 	private String miniMobUUID;
 	
@@ -295,6 +298,8 @@ public abstract class EntityMiniMobBase
 	{
 		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
 		
+		f *= smiteModifier;
+		
 		int i = 0;
 		
 		if (entity instanceof EntityLivingBase)
@@ -401,8 +406,12 @@ public abstract class EntityMiniMobBase
 			this.addPotionEffect(new PotionEffect(Potion.resistance.id, d));
 			this.addPotionEffect(new PotionEffect(Potion.fireResistance.id, d));
 			this.addPotionEffect(new PotionEffect(Potion.damageBoost.id, d));
+			
+			this.onLevelUp();
 		}
 	}
+	
+	protected void onLevelUp() {}
 	
     private void generateRandomParticles(String particleName)
     {

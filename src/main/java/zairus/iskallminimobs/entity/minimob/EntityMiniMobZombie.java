@@ -88,9 +88,35 @@ public class EntityMiniMobZombie
 	}
 	
 	@Override
+	public void onLivingUpdate()
+	{
+		super.onLivingUpdate();
+		
+		if (undeadHealing && this.getHealth() < this.getMaxHealth())
+		{
+			if (undeadHealingTicks <= 0.0F)
+			{
+				this.heal(1);
+				undeadHealingTicks = 0.50F;
+			}
+			
+			undeadHealingTicks -= 0.01F;
+			
+			if (this.getHealth() >= this.getMaxHealth())
+				undeadHealing = false;
+		}
+	}
+	
+	@Override
 	public boolean attackEntityAsMob(Entity entity)
 	{
 		return super.attackEntityAsMob(entity);
+	}
+	
+	@Override
+	public void onLevelUp()
+	{
+		undeadHealing = true;
 	}
 	
 	protected Item getDropItem()

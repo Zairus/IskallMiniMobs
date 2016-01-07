@@ -72,6 +72,9 @@ public class EntityMiniMobSkeleton
 	@Override
 	public boolean attackEntityAsMob(Entity entity)
 	{
+		if (this.getSkeletonType() == 1)
+			this.smiteModifier = 1.1F;
+		
 		if (super.attackEntityAsMob(entity))
 		{
 			if (this.getSkeletonType() == 1 && entity instanceof EntityLivingBase)
@@ -85,6 +88,12 @@ public class EntityMiniMobSkeleton
 		{
 			return false;
 		}
+	}
+	
+	@Override
+	public void onLevelUp()
+	{
+		undeadHealing = true;
 	}
 	
 	public EnumCreatureAttribute getCreatureAttribute()
@@ -107,6 +116,20 @@ public class EntityMiniMobSkeleton
 	public void onLivingUpdate()
 	{
 		super.onLivingUpdate();
+		
+		if (undeadHealing && this.getHealth() < this.getMaxHealth())
+		{
+			if (undeadHealingTicks <= 0.0F)
+			{
+				this.heal(1);
+				undeadHealingTicks = 0.50F;
+			}
+			
+			undeadHealingTicks -= 0.01F;
+			
+			if (this.getHealth() >= this.getMaxHealth())
+				undeadHealing = false;
+		}
 		
 		if (this.getSkeletonType() == 0)
 		{
