@@ -256,6 +256,9 @@ public abstract class EntityMiniMobBase
 			case 5:
 				name = "Mini Soldier";
 				break;
+			case 6:
+				name = "Mini Penguin";
+				break;
 			default:
 				name = "Mini Pig";
 				break;

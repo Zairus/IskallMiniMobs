@@ -103,6 +103,27 @@ public class EntityMiniMobSkeleton
 		}
 	}
 	
+	@Override
+	public void onLivingUpdate()
+	{
+		super.onLivingUpdate();
+		
+		if (this.getSkeletonType() == 0)
+		{
+			ItemStack head = this.getEquipmentInSlot(4);
+			
+			if (
+					head != null 
+					&& head.getItem() == Items.skull 
+					&& head.getItemDamage() == 1)
+			{
+				this.playSound("mob.wither.idle", 1.0F, 1.0F / (this.getRNG().nextFloat() * 0.4F + 0.8F));
+				this.setSkeletonType(1);
+				this.setInventorySlotContents(4, null);
+			}
+		}
+	}
+	
 	public void onDeath(DamageSource p_70645_1_)
 	{
 		super.onDeath(p_70645_1_);
@@ -133,6 +154,8 @@ public class EntityMiniMobSkeleton
 		
 		if (this.getSkeletonType() == 1)
 		{
+			this.entityDropItem(new ItemStack(Items.skull, 1, 1), 1);
+			
 			j = this.rand.nextInt(3 + p_70628_2_) - 1;
 			
 			for (k = 0; k < j; ++k) {
@@ -314,8 +337,16 @@ public class EntityMiniMobSkeleton
 		NBTTagCompound data = super.getMiniMobData();
 		
 		data.setInteger(MiniMobData.MOBTYPE_KEY, 2);
+		data.setInteger(MiniMobData.SKELETONTYPE_KEY, this.getSkeletonType());
 		
 		return data;
+	}
+	
+	@Override
+	public void applyAttributesFromNBT(NBTTagCompound data)
+	{
+		super.applyAttributesFromNBT(data);
+		this.setSkeletonType(data.getInteger(MiniMobData.SKELETONTYPE_KEY));
 	}
 	
 	@Override

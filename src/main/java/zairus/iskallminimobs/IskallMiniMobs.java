@@ -11,6 +11,7 @@ import zairus.iskallminimobs.handlers.MMEventHandler;
 import zairus.iskallminimobs.handlers.MMGuiHandler;
 import zairus.iskallminimobs.item.MMItems;
 import zairus.iskallminimobs.proxy.CommonProxy;
+import zairus.iskallminimobs.stats.MMAchievementList;
 import zairus.iskallminimobs.util.network.PacketPipeline;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -66,6 +67,8 @@ public class IskallMiniMobs
     	FMLCommonHandler.instance().bus().register(eventHandler);
     	MinecraftForge.EVENT_BUS.register(eventHandler);
     	MinecraftForge.TERRAIN_GEN_BUS.register(eventHandler);
+    	
+    	MMAchievementList.initPages();
     	
     	if (IskallMiniMobs.instance == null)
     		IskallMiniMobs.log("am I null?");

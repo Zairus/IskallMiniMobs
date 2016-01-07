@@ -7,6 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import zairus.iskallminimobs.item.MMItems;
+import zairus.iskallminimobs.stats.MMAchievementList;
 import zairus.iskallminimobs.tileentity.TileEntityMMIncubator;
 
 public class ContainerMMIncubator
@@ -40,6 +41,13 @@ public class ContainerMMIncubator
 	public TileEntityMMIncubator getIncubatorInventory()
 	{
 		return (TileEntityMMIncubator)this.inventory;
+	}
+	
+	@Override
+	public void bindPlayerInventory(InventoryPlayer playerinv, int posX, int posY)
+	{
+		super.bindPlayerInventory(playerinv, posX, posY);
+		playerinv.player.triggerAchievement(MMAchievementList.mmGestation);
 	}
 	
 	@Override

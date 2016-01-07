@@ -7,6 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import zairus.iskallminimobs.item.MMItems;
+import zairus.iskallminimobs.stats.MMAchievementList;
 import zairus.iskallminimobs.tileentity.TileEntityMMDNAExtractor;
 
 public class ContainerMMDNAExtractor
@@ -26,6 +27,13 @@ public class ContainerMMDNAExtractor
 		this.addSlotToContainer(new SlotDNA(inv, 4, 12, 20, SlotDNA.SLOT_CORPSE));
 		this.addSlotToContainer(new SlotDNA(inv, 5, 71, 20, SlotDNA.SLOT_EMBRYO));
 		this.addSlotToContainer(new SlotDNA(inv, 6, 130, 20, SlotDNA.SLOT_RESULT));
+	}
+	
+	@Override
+	public void bindPlayerInventory(InventoryPlayer playerinv, int posX, int posY)
+	{
+		super.bindPlayerInventory(playerinv, posX, posY);
+		playerinv.player.triggerAchievement(MMAchievementList.welcomeBack);
 	}
 	
 	@Override

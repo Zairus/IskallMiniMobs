@@ -1,15 +1,20 @@
 package zairus.iskallminimobs.handlers;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetVillageBlockID;
 import zairus.iskallminimobs.entity.minimob.EntityMiniMobBase;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import zairus.iskallminimobs.item.MMItems;
+import zairus.iskallminimobs.stats.MMAchievementList;
 
 public class MMEventHandler
 {
@@ -17,6 +22,16 @@ public class MMEventHandler
 	public void onGetVillageBlockID(GetVillageBlockID event)
 	{
 		;
+	}
+	
+	@SubscribeEvent
+	public void onItemCrafted(ItemCraftedEvent ev)
+	{
+		ItemStack crafted = ev.crafting;
+		EntityPlayer player = ev.player;
+		
+		if (crafted.getItem() == MMItems.mm_pellet)
+			player.triggerAchievement(MMAchievementList.inYourPocket);
 	}
 	
 	@SubscribeEvent

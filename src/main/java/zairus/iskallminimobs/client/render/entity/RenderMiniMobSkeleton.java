@@ -18,6 +18,7 @@ public class RenderMiniMobSkeleton
 	extends RenderBiped
 {
 	private static final ResourceLocation skeletonTextures = new ResourceLocation("textures/entity/skeleton/skeleton.png");
+	private static final ResourceLocation witherSkeletonTextures = new ResourceLocation("textures/entity/skeleton/wither_skeleton.png");
 	
 	public RenderMiniMobSkeleton()
 	{
@@ -26,7 +27,10 @@ public class RenderMiniMobSkeleton
 	
 	protected void preRenderCallback(EntityMiniMobSkeleton skeleton, float p_77041_2_)
 	{
-		GL11.glScalef(0.5F, 0.5F, 0.5F);
+		if (skeleton.getSkeletonType() == 1)
+			GL11.glScalef(0.7F, 0.7F, 0.7F);
+		else
+			GL11.glScalef(0.5F, 0.5F, 0.5F);
 	}
 	
 	protected void func_82422_c()
@@ -36,7 +40,7 @@ public class RenderMiniMobSkeleton
 	
 	protected ResourceLocation getEntityTexture(EntityMiniMobSkeleton skeleton)
 	{
-		return skeletonTextures;
+		return (skeleton.getSkeletonType() == 1)? witherSkeletonTextures : skeletonTextures;
 	}
 	
 	protected ResourceLocation getEntityTexture(EntityLiving entity)
