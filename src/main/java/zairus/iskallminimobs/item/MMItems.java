@@ -3,6 +3,7 @@ package zairus.iskallminimobs.item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
+import zairus.iskallminimobs.item.MMEmbryo.EmbryoTypes;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MMItems
@@ -36,7 +37,7 @@ public class MMItems
 	
 	public static final void addLoot()
 	{
-		for (int i = 0; i < 6; ++i)
+		for (int i = 0; i < EmbryoTypes.nameArray().length; ++i)
 		{
 			ChestGenHooks.addItem(ChestGenHooks.PYRAMID_DESERT_CHEST, new WeightedRandomChestContent(new ItemStack(mm_embrio, 1, i), 1, 1, 2));
 			ChestGenHooks.addItem(ChestGenHooks.PYRAMID_JUNGLE_CHEST, new WeightedRandomChestContent(new ItemStack(mm_embrio, 1, i), 1, 1, 2));
