@@ -1,0 +1,45 @@
+[10:17:36] [main/INFO]: Setting user: Player632
+[10:17:38] [Client thread/INFO]: LWJGL Version: 2.9.1
+[10:17:49] [Client thread/INFO]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:Iskall MiniMobs, FMLFileResourcePack:CoFH Core
+[10:17:50] [Sound Library Loader/INFO]: Sound engine started
+[10:17:59] [Client thread/INFO]: Created: 16x16 textures/blocks-atlas
+[10:17:59] [Client thread/INFO]: Created: 16x16 textures/items-atlas
+[10:18:00] [Client thread/INFO]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:Iskall MiniMobs, FMLFileResourcePack:CoFH Core
+[10:18:00] [Client thread/INFO]: Created: 512x256 textures/blocks-atlas
+[10:18:00] [Client thread/INFO]: Created: 256x256 textures/items-atlas
+[10:18:01] [Sound Library Loader/INFO]: Sound engine started
+[10:18:33] [Server thread/INFO]: Starting integrated minecraft server version 1.7.10
+[10:18:33] [Server thread/INFO]: Generating keypair
+[10:18:33] [Server thread/INFO]: Converting map!
+[10:18:33] [Server thread/INFO]: Scanning folders...
+[10:18:33] [Server thread/INFO]: Total conversion count is 0
+[10:18:33] [Server thread/INFO]: Preparing start region for level 0
+[10:18:34] [Server thread/INFO]: Preparing spawn area: 33%
+[10:18:35] [Server thread/INFO]: Preparing spawn area: 84%
+[10:18:36] [Server thread/INFO]: Changing view distance to 12, from 10
+[10:18:36] [Server thread/INFO]: Player632[local:E:75cdaaa1] logged in with entity id 0 at (-163.5, 61.0, -78.5)
+[10:18:36] [Server thread/INFO]: Player632 joined the game
+[10:18:40] [Server thread/INFO]: Saving and pausing game...
+[10:18:40] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/Overworld
+[10:18:42] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/Nether
+[10:18:42] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/The End
+[10:19:26] [Server thread/INFO]: Saving and pausing game...
+[10:19:26] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/Overworld
+[10:19:26] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/Nether
+[10:19:26] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/The End
+[10:19:45] [Server thread/INFO]: Changing view distance to 10, from 12
+[10:19:57] [Server thread/INFO]: Player632 has just earned the achievement [Taking Inventory]
+[10:19:57] [Client thread/INFO]: [CHAT] Player632 has just earned the achievement [Taking Inventory]
+[10:20:10] [Server thread/INFO]: Player632 has just earned the achievement [Mini-Friendship]
+[10:20:10] [Client thread/INFO]: [CHAT] Player632 has just earned the achievement [Mini-Friendship]
+[10:22:13] [Server thread/INFO]: Saving and pausing game...
+[10:22:13] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/Overworld
+[10:22:13] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/Nether
+[10:22:13] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/The End
+[10:22:14] [Server thread/INFO]: Stopping server
+[10:22:14] [Server thread/INFO]: Saving players
+[10:22:14] [Server thread/INFO]: Saving worlds
+[10:22:14] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/Overworld
+[10:22:14] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/Nether
+[10:22:14] [Server thread/INFO]: Saving chunks for level 'MiniMobs T-1'/The End
+[10:22:15] [Client thread/INFO]: Stopping!
